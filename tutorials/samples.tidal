@@ -1,0 +1,313 @@
+hush
+
+{- TO SET BPM -}
+cps (100/60/4)
+
+{- PATTERN TO TEST CYCLES -}
+d1 $ s "bd sd cp sn"
+
+d2 $ s "hh:2 hh hh hh hh"
+
+{- Play One Sample -}
+d1 $ (fast 2) $ up "0 4 7 8" # s "ade:10" # cut "-1" # begin 0.75  
+
+{- how to run through samples in a folder -}
+d1 $ n (run 10) # sound "ade" # cut "1"
+
+d1 $ s "ade*3" # n (irand 10) 
+
+-- Good way to introduce dynamic looping --
+d1 $ sound "amencutup*8" # n (irand 8)
+
+-- nice way to hear samples randomly from a folder --
+d1 $ n (irand 10) # sound "ade" # legato "2"
+
+
+{- Sketch 1 -}
+d1 
+$ fast (scale 0.25 0.75 $ irand 10) 
+$ every 4 rev 
+$ s "[ade:1*2 ~ ade:1? ~]" 
+  # every 3 rev (up "<[0, 4, 7] [0, 4, 9] [[0, 4, 11] [0, 4, 7, 9]]>") 
+  # legato "3"
+  # cutoff (irand 2000)
+  # gain 0.8
+
+t1 (wash (chop 8) 4) 
+$ slow (scale 0.25 0.75 $ irand 10)
+$ every 5 rev 
+$ s "ade:1*5 ~ ade:1? ~" 
+  # up "<[12, 16, 19] [12, 16, 23] [[0, 4, 11] [0, 4, 7]]>"
+  # legato "3"
+  # cutoff (irand 2000)
+  # gain 0.8
+
+t1 ( xfadeIn 8 ) $ silence
+
+d2 
+$ every 5 rev 
+$ s "[bd sn sd*5 bd:2*2] sn*5" 
+  # size (sine) 
+  # room "[0 0.1 0.2] [0.2 0.1 0]" 
+  # orbit "0" 
+  # gain 0.8
+
+t2 ( xfadeIn 8 ) $ silence
+
+d3 
+$ every 6 (fast "1 2 3 4 5") 
+$ s "<arpy*8?, [ade:0 ade:5]?>" 
+  # up (choose [0, 2, 4, 5, 7, 9, 11, 12, 14]) 
+  # gain (scale 0.5 0.75 sine)
+  # room 0.1
+
+t3 ( xfadeIn 8 ) $ silence
+
+d4 
+$ every 2 (# begin rand)   
+$ every 8 (# end (scale 0.25 0.5 rand))
+$ s "alex*2" 
+  # n (irand 3) 
+  # gain (scale 0.8 1 sine)
+
+// fade out over 16 bars
+t4 (xfadeIn 16) $ silence
+
+d5
+$ degradeBy 0.20
+$ s "[bass*2]*2" 
+  # up "<0 2 [6 3]>"
+  
+t5 ( xfadeIn 8 ) $ silence
+
+{- TRACK MIXERS -}
+d1 silence
+
+d2 silence
+
+d3 silence
+
+d4 silence
+
+d5 silence
+
+hush
+
+Samples
+808
+808bd
+808cy
+808hc
+808ht
+808lc
+808lt
+808mc
+808mt
+808oh
+808sd
+909
+ab
+ade
+ades2
+ades3
+ades4
+alex
+alphabet
+amencutup
+armora
+arp
+arpy
+auto
+baa
+baa2
+bass
+bass0
+bass1
+bass2
+bass3
+bassdm
+bassfoo
+battles
+bd
+bend
+bev
+bin
+birds
+birds3
+bleep
+blip
+blue
+bottle
+breaks125
+breaks152
+breaks157
+breaks165
+breath
+bubble
+can
+casio
+cb
+cc
+chin
+chink
+circus
+clak
+click
+clubkick
+co
+control
+cosmicg
+cp
+cr
+crow
+d
+db
+diphone
+diphone2
+dist
+dork2
+dorkbot
+dr
+dr2
+dr55
+dr_few
+drum
+drumtraks
+e
+east
+electro1
+erk
+f
+feel
+feelfx
+fest
+fire
+flick
+fm
+foo
+future
+gab
+gabba
+gabbaloud
+gabbalouder
+glasstap
+glitch
+glitch2
+gretsch
+gtr
+h
+hand
+hardcore
+hardkick
+haw
+hc
+hh
+hh27
+hit
+hmm
+ho
+hoover
+house
+ht
+if
+ifdrums
+incoming
+industrial
+insect
+invaders
+jazz
+jungbass
+jungle
+juno
+jvbass
+kicklinn
+koy
+kurt
+latibro
+led
+less
+lighter
+linnhats
+lt
+made
+made2
+mash
+mash2
+metal
+miniyeah
+moan
+monsterb
+moog
+mouth
+mp3
+msg
+mt
+mute
+newnotes
+noise
+noise2
+notes
+numbers
+oc
+odx
+off
+outdoor
+pad
+padlong
+pebbles
+perc
+peri
+pluck
+popkick
+print
+proc
+procshort
+psr
+rave
+rave2
+ravemono
+realclaps
+reverbkick
+rm
+rs
+sax
+sd
+seawolf
+sequential
+sf
+sheffield
+short
+sid
+sine
+sitar
+sn
+space
+speakspell
+speech
+speechless
+speedupdown
+stab
+stomp
+subroc3d
+sugar
+sundance
+tabla
+tabla2
+tablex
+tacscan
+tech
+techno
+tink
+tok
+toys
+trump
+ul
+ulgab
+uxay
+v
+voodoo
+wind
+wobble
+world
+xmas
+yeah
