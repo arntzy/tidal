@@ -1,0 +1,10 @@
+{- merry christmas -}
+cps 1
+
+d1 $ s "bd? tabla*3?" # n (choose [0..26])
+
+d2 $ every 8 (fast 2) $ s "xmas/8" # speed (-0.5) # gain 0.85  
+
+d3 $ every 4 (fast 2) $ s "trump?" # n (choose [0..10]) # gain 0.75
+
+hush

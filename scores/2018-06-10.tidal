@@ -1,0 +1,61 @@
+{- D1 -}
+d1 
+$ fast (scale 0.25 0.75 $ irand 10) 
+$ every 4 rev 
+$ s "[ade:1*2 ~ ade:1? ~]" 
+  # every 3 rev (up "<[0, 4, 7] [0, 4, 9] [[0, 4, 11] [0, 4, 7, 9]]>") 
+  # legato "3"
+  # cutoff (irand 2000)
+  # gain 0.8
+
+t1 (wash (chop 8) 4) 
+$ slow (scale 0.25 0.75 $ irand 10)
+$ every 5 rev 
+$ s "ade:1*5 ~ ade:1? ~" 
+  # up "<[12, 16, 19] [12, 16, 23] [[0, 4, 11] [0, 4, 7]]>"
+  # legato "3"
+  # cutoff (irand 2000)
+  # gain 0.8
+
+t1 ( xfadeIn 8 ) $ silence
+
+{- D2 -}
+d2 
+$ every 5 rev 
+$ s "[bd sn sd*5 bd:2*2] sn*5" 
+  # size (sine) 
+  # room "[0 0.1 0.2] [0.2 0.1 0]" 
+  # orbit "0" 
+  # gain 0.8
+
+t2 ( xfadeIn 8 ) $ silence
+
+{- D3 -}
+d3 
+$ every 6 (fast "1 2 3 4 5") 
+$ s "<arpy*8?, [ade:0 ade:5]?>" 
+  # up (choose [0, 2, 4, 5, 7, 9, 11, 12, 14]) 
+  # gain (scale 0.5 0.75 sine)
+  # room 0.1
+
+t3 ( xfadeIn 8 ) $ silence
+
+{- D4 -}
+d4 
+$ every 2 (# begin rand)   
+$ every 8 (# end (scale 0.25 0.5 rand))
+$ s "alex*2" 
+  # n (irand 3) 
+  # gain (scale 0.8 1 sine)
+
+t4 (xfadeIn 16) $ silence
+
+{- D5 -}
+d5
+$ degradeBy 0.20
+$ s "[bass*2]*2" 
+  # up "<0 2 [6 3]>"
+  
+t5 ( xfadeIn 8 ) $ silence
+
+hush

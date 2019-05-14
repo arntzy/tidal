@@ -1,0 +1,38 @@
+setcps 1
+
+d1 $ sound "{arpy bass2 drum notes can}%4"
+
+d2 $ sound "bd sn:3"
+
+d1 $ jux (# accelerate "-0.1") $ s "supermandolin*8" # midinote "[80!6 78]/8" 
+  # sustain "1 0.25 2 1"
+  # gain "0.85"
+
+d1 $ s "supernoise/8" # midinote ((irand 10) + 30) # sustain "8"
+ # accelerate "0.5" # voice "0.5" # pitch1 "0.15" # slide "-0.5" # resonance "0.7"
+ # attack "1" # release "20" # room "0.9" # size "0.9" # orbit "1"
+
+d1 silence
+
+d1 $ sound "[bd sn kurt]/2"
+   # slow 3 (vowel "a e o")
+
+p "jimmy" $ sound "bd sd"
+
+p "susan" $ sound "cp(3,8)"
+
+xfade "susan" $ sound "gabba(3,8,<0 2 4>)"
+
+xfade "susan" $ sound "cp(5,8)"
+
+p "cpsfun" $ s "bd sd(3,8)" # cps (slow 8 $ 0.5 + saw)
+
+once $ n (run (13)) # s "yeah"   
+
+p "cpsfun" silence
+
+p 1 $ s "supermandolin*3" # midinote (rev "40 50 60")  
+
+p "susan" silence
+
+hush

@@ -1,0 +1,26 @@
+cps 1
+
+-- Cool Randomness --
+d1 $ slow 2 $ sound "[[[feel:5*8,feel*3] feel:3*8]?, feel*4]"
+
+-- Cool way of using a longer sample in a glitchy way --
+d1 $ slow 32 $ jux (rev) $ striate' 32 (1/16) $ sound "bev"
+
+--Break beaty--
+d1 $ every 2 (linger 0.25) $ loopAt 2 $ chop 8 $ sound "breaks125"
+
+-- idea for recording words and rearranging them --
+d1 $ slow 4 $ every 3 (rev) $ n "0 1 2 3" # sound "numbers"
+
+-- alternate functions with spread --
+d1 $ spread ($) [fast 2, rev, slow 2, striate 3, (# speed "0.8")]
+    $ sound "[bd*2 [~ bd]] [sn future]*2 cp jvbass*4"
+
+-- Nice Granular sampler --
+d1 $ loopAt 8 $ rev $ chop 32 $ sound "bev"
+
+-- Good way to introduce dynamic looping --
+d1 $ sound "amencutup*8" # n (irand 8)
+
+{- how to run through samples in a folder -}
+d1 $ n (run 8) # sound "amencutup"

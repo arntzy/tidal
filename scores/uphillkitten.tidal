@@ -1,0 +1,99 @@
+setcps (120/4/100)
+
+
+#############
+# A SECTION #
+#############
+-- DRUMS
+
+d1 $ s "kicklinn kicklinn ~ ~ kicklinn ~ ~"
+
+d2 $ s "[~ ~ realclaps ~ ~ [~ realclaps?] ~]"
+
+d3 $ s "[hh:10*7]*2?"
+
+
+-- STRINGS
+let cello = "cello"
+
+let violin = "violin"
+
+
+p "cello" $ cat [
+  stack [
+    up "[11 11] [4 ~] [11 11] [4 ~] [11 11] [4 9] [9 4]" # s cello,
+    up "[-1 -1] [~] [-1 -1] [~] [-1 -1] [~ -3] [-3 ~]" # s cello
+  ], 
+  stack [
+    up "[11 11] [4 ~] [11 11] [4 ~] [11 11] [4 9] [9 4]" # s cello,
+    up "[-1 -1] [~] [-1 -1] [~] [-1 -1] [~ -3] [-3 ~]" # s cello
+  ], 
+  stack [
+    up "[9 9] [2 ~] [7 7] [2 ~] [7 7] [2 9] [9 2]" # s cello,
+    up "[-3 -3] [~] [-5 -5] [~] [-5 -5] [~ -3] [-3 ~]" # s cello
+  ],
+  stack [
+    up "[9 9] [2 ~] [7 7] [2 ~] [7 7] [2 9] [9 2]" # s cello,
+    up "[-3 -3] [~] [-5 -5] [~] [-5 -5] [~ -3] [-3 ~]" # s cello
+  ]
+] # gain 1
+
+p "violin" $ cat [
+  stack [
+    up "[11 11] [4 ~] [11 11] [4 ~] [11 11] [4 9] [9 4]" # s violin,
+    up "[-1 -1] [~] [-1 -1] [~] [-1 -1] [~ -3] [-3 ~]" # s violin
+  ], 
+  stack [
+    up "[11 11] [4 ~] [11 11] [4 ~] [11 11] [4 9] [9 4]" # s violin,
+    up "[-1 -1] [~] [-1 -1] [~] [-1 -1] [~ -3] [-3 ~]" # s violin
+  ], 
+  stack [
+    up "[9 9] [2 ~] [7 7] [2 ~] [7 7] [2 9] [9 2]" # s violin,
+    up "[-3 -3] [~] [-5 -5] [~] [-5 -5] [~ -3] [-3 ~]" # s violin
+  ],
+  stack [
+    up "[9 9] [2 ~] [7 7] [2 ~] [7 7] [2 9] [9 2]" # s violin,
+    up "[-3 -3] [~] [-5 -5] [~] [-5 -5] [~ -3] [-3 ~]" # s violin
+  ]
+] # gain 1 
+
+
+let fsharp1 = "piano:20"
+
+let a2 = "piano:2"
+
+let eflat3 = "piano:16"
+
+p "piano" $ cat [
+  stack [
+    up "[0] ~ ~ ~ [0] ~ ~"  # s fsharp1,
+    up "~ ~ [2] ~ ~ [~ 2] ~"  # s a2,
+    up "~ ~ [0] ~ ~ [~ 0] ~"  # s eflat3
+  ]
+] # gain 0.75
+
+p "piano" silence
+
+p "violin" silence
+
+p "cello" silence
+
+d1 $ stack [ 
+  sound "bd bd*2", 
+  sound "hh*2 [sn cp] cp future*4", 
+  sound "arpy" +| n "0 .. 15"
+]
+
+d1 $ sound "bd <arpy:1 arpy:2 arpy:3>"
+
+p "violin" $ up "[2]*7" # s "violin:1184"
+
+p "sitar" $ up "0" # s "<sitar:3? sitar:4 sitar:2? sitar:5 sitar:6? sitar:7 sitar:8?>" # gain 0.75
+
+d1 silence
+
+d1 silence
+
+d4 silence
+
+hush

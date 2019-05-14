@@ -1,0 +1,9 @@
+setcps 0.5
+
+d1 $ s "bd(3,8) drum*4"
+
+xfade 1 $ s "arpy*8" # n (run 8)
+
+hush
+
+

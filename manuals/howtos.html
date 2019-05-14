@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tidal - How to x, with Tidal</title>
+    <meta name="description" content="Domain specific language for live coding of pattern">
+    <link rel="stylesheet" href="/css/tidal.css">
+    <link rel="icon" type="image/png" href="favicon/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="favicon/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="favicon/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="favicon/favicon-194x194.png" sizes="194x194">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fitvids/1.1.0/jquery.fitvids.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <!-- <script src="/WebDirt/SampleBank.js"></script>
+         <script src="/WebDirt/WebDirt.js"></script>
+         <script src="/WebDirt/Graph.js"></script> -->
+    <script src="/js/tidal.js"></script>
+  </head>
+  <body data-spy="scroll" data-target=".tidal-sidebar" class=howtos>
+    <div class="wrapper">
+      <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="navbar-wrap">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#tidal-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="/">
+	        TidalCycles
+              </a>
+            </div>
+            <div class="navbar-collapse collapse" id="tidal-navbar-collapse-1">
+              <ul class="nav navbar-nav">
+		<li><a href="http://blog.tidalcycles.org">News</a></li>
+                
+                
+                <li >
+                  <a href="/getting_started.html">Installation</a>
+                </li>
+                
+                <li >
+                  <a href="/patterns.html">Creating Patterns</a>
+                </li>
+                
+                <li >
+                  <a href="/functions.html">Reference</a>
+                </li>
+                
+                <li >
+                  <a href="/videos.html">Video</a>
+                </li>
+                
+                <li class="active" >
+                  <a href="/howtos.html">HowTos</a>
+                </li>
+                
+                <li><a href="http://blog.tidalcycles.org/community/">Community</a></li>
+		<li><a href="http://blog.tidalcycles.org/faq/">FAQ</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <div id="messages-wrap">
+        <div class="container" id="messages">
+      </div>
+                      </div>
+         
+      <div class="main-content">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-9">
+              <div class="page-header">
+                <h1>How to x, with Tidal</h1>
+              </div>
+              <p>Doing this and that</p>
+   
+              <section>
+                <header>
+                  <h1 id="multi_channel" class="tidal-toc-heading">Multi-channel</h1>
+                </header>
+                 
+                
+                <article>
+                   <p>If you have a multichannel sound module, and a lot of speakers, you may wish to use tidal in multichannel mode. Another possibility is that you want to make a multitrack recording, or send a pattern to a headphone channel for previewing.</p>
+
+<h3 id="dirt">Dirt</h3>
+
+<p>To do this, first you have to start the Dirt synth with more channels than the default of 2 (stereo), and it’s also highly recommended to turn the compressor off:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>./dirt --channels 4 --no-dirty-compressor
+</code></pre>
+</div>
+
+<h3 id="tidal">Tidal</h3>
+
+<p>From Tidal, you address the different channels with the <code class="highlighter-rouge">pan</code> synth parameter, for example, this would play on each of the four speakers:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">sound</span> <span class="s">"numbers:0 numbers:1 numbers:2 numbers:3"</span>
+  <span class="o">#</span> <span class="n">pan</span> <span class="s">"0 0.25 0.5 0.75"</span>
+</code></pre>
+</div>
+
+<p>The range of the pan parameter is still from 0 to 1. So, if you had four speakers, 0 would be the first one, 0.5 would be the third, 0.625 would be panned halfway between the third and fourth, and 0.875 would be halfway between fourth and first. 1 would be the same as 0.</p>
+
+                </article>
+                
+                
+              </section>
+                
+              <section>
+                <header>
+                  <h1 id="multi_laptop" class="tidal-toc-heading">Multi-laptop</h1>
+                </header>
+                 
+                
+                <article>
+                   <p>You can run Tidal across lots of laptops, and have them all run in
+time.</p>
+
+<h2 id="step-1-sync-computer-clocks">Step 1: sync computer clocks</h2>
+
+<p>Ensure that the system clocks of all the computers are already in
+sync, via something like <code class="highlighter-rouge">ntpd</code>, or <code class="highlighter-rouge">ptpd</code>. If you’re using <code class="highlighter-rouge">ntpd</code>
+make sure all the computers are synced with the same network
+server. <code class="highlighter-rouge">ptpd</code> just syncs across a local network, is much faster and
+more accurate.</p>
+
+<h2 id="step-2-sync-to-tempo-clock">Step 2: sync to tempo clock</h2>
+
+<p>Choose one of your computers to be the ‘master clock’, which the
+others connect to, and start it up running Tidal. Find out and note
+down its IP address.</p>
+
+<p>On the other computers(s), use the master’s tempo clock by setting an
+environment variable when you start your editor, e.g.:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nv">TIDAL_TEMPO_IP</span><span class="o">=</span>&lt;HOST IP ADDRESS&gt; atom &amp;
+</code></pre>
+</div>
+
+<p>Replace <code class="highlighter-rouge">&lt;HOST IP ADDRESS&gt;</code> with the master’s IP address. If you’re
+using emacs or some editor, this still works, just replace <code class="highlighter-rouge">atom</code> with
+the command to start your editor.</p>
+
+<h2 id="step-3-evaluate-crazy-sound-on-all-the-computers">Step 3: evaluate crazy sound on all the computers</h2>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">slow</span> <span class="mi">16</span> <span class="o">$</span> <span class="n">striate</span> <span class="mi">128</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bd*12 sn*8 [hh sn bd]*4 sn*4 bd*4"</span>
+</code></pre>
+</div>
+
+<p>Hopefully all the computers will be in time with each other, and
+changes to the <code class="highlighter-rouge">cps</code> will take effect across all of them.</p>
+
+<h2 id="use-a-dirt-connection-on-another-laptop">Use a Dirt connection on another laptop</h2>
+
+<p>If you wish, you can use a dirt synth running on a different
+laptop. To do this start up a Tidal process in your editor, then
+evaluate this code:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">&lt;-</span> <span class="n">stream</span> <span class="s">"&lt;IP ADDRESS OF HOST&gt;"</span> <span class="mi">7771</span> <span class="n">dirt</span>
+</code></pre>
+</div>
+
+<p>But instead replace <code class="highlighter-rouge">&lt;IP ADDRESS OF HOST&gt;</code> with the host’s IP address.</p>
+
+
+                </article>
+                
+                
+              </section>
+                
+              <section>
+                <header>
+                  <h1 id="midi" class="tidal-toc-heading">MIDI</h1>
+                </header>
+                 
+                
+                <article>
+                   <p>A special Haskell module named <code class="highlighter-rouge">tidal-midi</code> allows you to send MIDI
+pattern messages to external devices and software synths.</p>
+
+<p>You can use it using standard general MIDI, or use a synth-specific
+library - there currently exist libraries for the Volca Keys, Bass and
+Beats.</p>
+
+<h2 id="prerequisites">Prerequisites</h2>
+
+<ul>
+  <li><a href="https://www.haskell.org/platform/windows.html">Haskell</a> (Windows users: make sure you get the <strong>32bit</strong> version!)</li>
+</ul>
+
+<h2 id="install">Install</h2>
+
+<p>To install TidalCycles MIDI support, just run this in a terminal window:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>cabal update
+cabal install tidal-midi
+</code></pre>
+</div>
+
+<h2 id="load-the-midi-modules">Load the MIDI modules</h2>
+
+<p>Start up TidalCycles in your favourite editor, then the following line
+of code (with e.g. shift-enter):</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="kr">import</span> <span class="nn">Sound.Tidal.MIDI.Context</span>
+</code></pre>
+</div>
+
+<h2 id="talk-midi-from-tidalcycles">Talk MIDI from TidalCycles</h2>
+
+<p>Next, assuming you have a MIDI device attached, you need to get its
+device id. Run the following command (again in the editor, with
+shift-enter):</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">displayOutputDevices</span> <span class="o">&gt;&gt;=</span> <span class="n">putStrLn</span>
+</code></pre>
+</div>
+
+<p>You should see output like the following:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>ID:	Name
+0:	Midi Through Port-0
+1:  USB Midi Cable MIDI
+</code></pre>
+</div>
+
+<p>In this case we have a synth attached to the second device, a USB Midi
+cable, so we can connect to it with the following:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">devices</span> <span class="o">&lt;-</span> <span class="n">midiDevices</span>
+
+<span class="n">m1</span> <span class="o">&lt;-</span> <span class="n">midiStream</span> <span class="n">devices</span> <span class="s">"USB Midi Cable MIDI"</span> <span class="mi">1</span> <span class="n">synthController</span>
+</code></pre>
+</div>
+
+<p>The number <code class="highlighter-rouge">1</code> there specifies the MIDI channel your synth is listening to, in this case the first one (we start counting from 1 here, a gotcha as some software starts counting from 0). Now you are ready to play some MIDI notes. Type and evaluate the following to play MIDI note #40 and #52:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">m1</span> <span class="o">$</span> <span class="n">midinote</span> <span class="s">"40 52"</span>
+</code></pre>
+</div>
+
+<p>With MIDI notes, <code class="highlighter-rouge">60</code> stands for middle C note. If you use <code class="highlighter-rouge">n</code> rather
+than <code class="highlighter-rouge">midinote</code>, then you’ll find that <code class="highlighter-rouge">0</code> is middle C.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">m1</span> <span class="o">$</span> <span class="n">n</span> <span class="s">"0 4 -8"</span>
+</code></pre>
+</div>
+
+<p>Using <code class="highlighter-rouge">n</code>, you can also specify notes via their names, e.g. c sharp
+in the fifth octave followed by a in the fourth octave:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">m1</span> <span class="o">$</span> <span class="n">n</span> <span class="s">"cs5 a4"</span>
+</code></pre>
+</div>
+
+<h2 id="making-midi-patterns">Making MIDI patterns</h2>
+
+<p>You can create patterns of MIDI notes just like with Dirt:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">m1</span> <span class="o">$</span> <span class="n">midinote</span> <span class="s">"40 [32 34] 36*2 42*3"</span>
+<span class="n">m1</span> <span class="o">$</span> <span class="n">midinote</span> <span class="s">"[[32 34], [36 38]]"</span>
+<span class="n">m1</span> <span class="o">$</span> <span class="n">every</span> <span class="mi">3</span> <span class="p">(</span><span class="n">density</span> <span class="mi">2</span><span class="p">)</span> <span class="o">$</span> <span class="n">every</span> <span class="mi">4</span> <span class="p">(</span><span class="n">palindrome</span><span class="p">)</span> <span class="o">$</span> <span class="n">n</span> <span class="s">"{c a4 f3}%8"</span>
+<span class="n">m1</span> <span class="o">$</span> <span class="n">n</span> <span class="s">"c a"</span> <span class="o">#</span> <span class="n">dur</span> <span class="p">(</span><span class="n">scale</span> <span class="mf">0.1</span> <span class="mf">0.4</span> <span class="n">sine1</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>If you find your note names aren’t coming out right, it’s probably because you’re
+trying to use them with <code class="highlighter-rouge">midinote</code>, instead of <code class="highlighter-rouge">n</code>.</p>
+
+<h2 id="using-synth-specific-libraries">Using synth-specific libraries</h2>
+
+<p>You can find a list of
+<a href="https://hackage.haskell.org/package/tidal-midi">available synths libraries here</a>. For example to use the Volca Keys library you first import it, then make its MIDI stream:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="kr">import</span> <span class="nn">Sound.Tidal.MIDI.VolcaKeys</span>
+
+<span class="n">m2</span> <span class="o">&lt;-</span> <span class="n">midiStream</span> <span class="n">devices</span> <span class="s">"USB Midi Cable MIDI 1"</span> <span class="mi">1</span> <span class="n">keysController</span>
+</code></pre>
+</div>
+
+<p>You can then access the Volca Keys-specific MIDI controller
+parameters, for example <code class="highlighter-rouge">lfo</code> and <code class="highlighter-rouge">cutoff</code>:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">m1</span> <span class="o">$</span> <span class="n">every</span> <span class="mi">4</span> <span class="p">(</span><span class="n">slow</span> <span class="mf">1.5</span><span class="p">)</span> <span class="o">$</span> <span class="n">slow</span> <span class="mi">2</span> <span class="o">$</span> <span class="n">n</span> <span class="p">(</span><span class="n">offadd</span> <span class="mf">0.25</span> <span class="p">(</span><span class="mi">7</span><span class="p">)</span> <span class="s">"f3(3,8) g5*3"</span><span class="p">)</span>
+  <span class="o">#</span> <span class="n">lfo</span> <span class="s">"0.1"</span>
+  <span class="o">#</span> <span class="n">cutoff</span> <span class="p">(</span><span class="n">slow</span> <span class="mi">4</span> <span class="n">sine1</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<h2 id="community-questions">Community questions</h2>
+
+<p>Frequently asked questions by tidal-midi users:</p>
+
+<iframe src="http://ask.tidalcycles.org/widgets/questions/1/" class="tidal-faq-embed"></iframe>
+
+<p>Still not happy? Check out <a href="http://ask.tidalcycles.org/questions/scope:all/sort:activity-desc/tags:MIDI/page:1/">all tidal-midi questions on our Q&amp;A platform</a>!</p>
+
+                </article>
+                
+                
+              </section>
+                
+              <section>
+                <header>
+                  <h1 id="live" class="tidal-toc-heading">Playing live</h1>
+                </header>
+                 
+                
+                <article>
+                   <p>This guide assumes you are performing somewhere with Tidal, on your own laptop, and that you want to project your screen.</p>
+
+<h1 id="pa">PA</h1>
+
+<p>Ask for stereo, and if it’s a large room, for monitoring as well.</p>
+
+<p>Stereo - One of Tidal’s strengths is being able to do strange stereo cross-patterns. Some venues have mono systems, however. They may have two speakers, and tell you they have stereo sound, but when you get there you find everything is mono.. Either because it’s wired as mono for some reason, or they only have a mono amp.</p>
+
+<p>Monitoring - Even if you have stereo sound, you might not be able to hear it, because you’ve been placed behind the speakers (so the audience can hear you fine, but you can’t), or because they’re too far away in a large room. This might be workable (for some kinds of) DJs, but it makes improvising impossible if you can’t hear properly. If you do have monitoring, again it might only be mono.</p>
+
+<h1 id="plugging-in">Plugging in</h1>
+
+<p>If you just have your onboard laptop sound, then make sure you bring something like a “3.5mm Stereo Mini Jack to Twin RCA Phono Cable Lead”, or a “1/8 inch TRS to Dual 1/4 Inch TS Cable”. A couple of metres long and of reasonable quality, but don’t get ripped off - it’s just a wire. Here are a couple of suggestions:</p>
+
+<ul>
+  <li><a href="http://www.amazon.com/Hosa-CMP153-Cable-Inch-Dual/dp/B000068O3C">amazon.com: Hosa CMP153 Y Cable</a></li>
+  <li><a href="http://www.amazon.co.uk/gp/product/B007KN28BY/ref=pd_lpo_sbs_dp_ss_2/277-0257037-9317524">amazon.com: 3.5mm Mini Jack Stereo to Twin RCA</a></li>
+</ul>
+
+<p>If you have terrible onboard sound, or generally want pro quality with nice balanced 1/4” jack outputs, consider a sound module such as a [Focusrite Scarlett] (http://www.amazon.com/Focusrite-2i2-USB-Recording-Interface/dp/B005OZE9SA/ref=sr_1_2).</p>
+
+<h1 id="hum">Hum</h1>
+
+<p>This can be nasty. It could come from a ‘ground loop’, your laptop power supply, or the projector you’re plugged into. Be sure to soundcheck with the projector plugged in, this can be a real problem. Try:</p>
+
+<ul>
+  <li>unplugging the video cable - if it stops, it’s the projector..</li>
+  <li>unplugging your laptop power</li>
+  <li>if you have a sound engineer, ask for a DI box with ground lift</li>
+</ul>
+
+<p>Or it might be worth getting the latter in advance, e.g. the Behringer ultra di20.</p>
+
+<h1 id="packing-up">Packing up</h1>
+
+<p>There are a lot of videos on YouTube about how to coil cables so they don’t break, <em>definitely</em> worth a watch.</p>
+
+<iframe src="https://www.youtube.com/embed/pEd7ru24Vx0" class="tidal-video" width="100%" height="400" frameborder="0"></iframe>
+
+
+                </article>
+                
+                
+              </section>
+              
+              <!-- content end -->
+            </div>
+            <div class="col-md-3">
+              <div class="tidal-sidebar">
+                <ul class="nav affix">
+                    
+                  <li>
+                    <a href="#multi_channel">
+                      <h4>Multi-channel</h4>
+                    </a>
+                    <ul class="nav">
+                         
+                    </ul>
+                  </li>
+                    
+                  <li>
+                    <a href="#multi_laptop">
+                      <h4>Multi-laptop</h4>
+                    </a>
+                    <ul class="nav">
+                         
+                    </ul>
+                  </li>
+                    
+                  <li>
+                    <a href="#midi">
+                      <h4>MIDI</h4>
+                    </a>
+                    <ul class="nav">
+                         
+                    </ul>
+                  </li>
+                    
+                  <li>
+                    <a href="#live">
+                      <h4>Playing live</h4>
+                    </a>
+                    <ul class="nav">
+                         
+                    </ul>
+                  </li>
+                  
+                </ul>
+              </div>
+              <!-- sidebar end -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- main end -->
+      
+      <footer class="navbar navbar-default navbar-static-bottom">
+        <div class="container">
+          <p class="navbar-text">
+            Docs updated Jan 2018, TidalCycles version <strong>0.9.6</strong>
+          </p>
+          <ul class="nav navbar-nav">
+            
+            
+            <li >
+              <a href="/credits.html">Credits</a>
+            </li>
+            
+          </ul>
+        </div>
+      </footer>
+      <!-- Piwik -->
+<script type="text/javascript">
+  var _paq = _paq || [];
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//stats.lurk.org/";
+    _paq.push(['setTrackerUrl', u+'piwik.php']);
+    _paq.push(['setSiteId', 1]);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<noscript><p><img src="//stats.lurk.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+<!-- End Piwik Code -->
+
+    </div>
+  </body>
+</html>

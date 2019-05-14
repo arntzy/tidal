@@ -1,0 +1,3020 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tidal - Functions</title>
+    <meta name="description" content="Domain specific language for live coding of pattern">
+    <link rel="stylesheet" href="/css/tidal.css">
+    <link rel="icon" type="image/png" href="favicon/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="favicon/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="favicon/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="favicon/favicon-194x194.png" sizes="194x194">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fitvids/1.1.0/jquery.fitvids.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <!-- <script src="/WebDirt/SampleBank.js"></script>
+         <script src="/WebDirt/WebDirt.js"></script>
+         <script src="/WebDirt/Graph.js"></script> -->
+    <script src="/js/tidal.js"></script>
+  </head>
+  <body data-spy="scroll" data-target=".tidal-sidebar" class=functions>
+    <div class="wrapper">
+      <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="navbar-wrap">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#tidal-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="/">
+	        TidalCycles
+              </a>
+            </div>
+            <div class="navbar-collapse collapse" id="tidal-navbar-collapse-1">
+              <ul class="nav navbar-nav">
+		<li><a href="http://blog.tidalcycles.org">News</a></li>
+                
+                
+                <li >
+                  <a href="/getting_started.html">Installation</a>
+                </li>
+                
+                <li >
+                  <a href="/patterns.html">Creating Patterns</a>
+                </li>
+                
+                <li class="active" >
+                  <a href="/functions.html">Reference</a>
+                </li>
+                
+                <li >
+                  <a href="/videos.html">Video</a>
+                </li>
+                
+                <li >
+                  <a href="/howtos.html">HowTos</a>
+                </li>
+                
+                <li><a href="http://blog.tidalcycles.org/community/">Community</a></li>
+		<li><a href="http://blog.tidalcycles.org/faq/">FAQ</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <div id="messages-wrap">
+        <div class="container" id="messages">
+      </div>
+                      </div>
+         
+      <div class="main-content">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-9">
+              <div class="page-header">
+                <h1>Functions</h1>
+              </div>
+              <p>You can manipulate patterns using a wide variety of functions,
+described below. Some will transform the time structure of the pattern
+itself (e.g. make slower, faster), change the samples within the
+pattern (e.g. chop them in to tiny bits) and others will combine two
+patterns into a new one. You can use layer these functions on top of
+each other to create weird interference patterns. Have fun with them!</p>
+   
+              <section>
+                <header>
+                  <h1 id="pattern_transformers" class="tidal-toc-heading">Pattern Transformers</h1>
+                </header>
+                 
+                
+                <article>
+                   <p>Pattern transformers are functions that take a pattern as input and transform
+it into a new pattern.</p>
+
+<p>In the following, functions are shown with their Haskell type and a
+short description of how they work.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="palindrome" class="tidal-toc-heading">palindrome</h1>
+                   <p><code class="highlighter-rouge">palindrome</code> applies <code class="highlighter-rouge">rev</code> to  a pattern every other cycle, so that
+the pattern alternates between forwards and backwards.</p>
+
+<p>Example:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">palindrome</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"arpy:0 arpy:1 arpy:2 arpy:3"</span>
+</code></pre>
+</div>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="mapping-over-patterns" class="tidal-toc-heading">Mapping over patterns</h1>
+                   <p>Sometimes you want to transform all the events inside a pattern, and
+not the time structure of the pattern itself. For example, if you
+wanted to pass a sinewave to <code class="highlighter-rouge">speed</code>, but wanted the sinewave to go
+from <code class="highlighter-rouge">0</code> to <code class="highlighter-rouge">2</code> rather than from <code class="highlighter-rouge">0</code> to <code class="highlighter-rouge">1</code>, you could do this:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bd*2 [bd [sn sn*2 sn] sn]"</span>
+   <span class="o">#</span> <span class="n">speed</span> <span class="p">((</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span> <span class="o">&lt;$&gt;</span> <span class="n">sine</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>The above applies the function <code class="highlighter-rouge">(* 2)</code> (which simply means multiply by
+two), to all the values inside the <code class="highlighter-rouge">sine</code> pattern.</p>
+
+<p>However since Tidal 0.9, with patterns of numbers you can do arithmetic directly, like this:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bd*2 [bd [sn sn*2 sn] sn]"</span>
+   <span class="o">#</span> <span class="n">speed</span> <span class="p">(</span><span class="n">sine</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>There is a gotcha here in that you’ll want to arrange things so the pattern you’re working on is on the left hand side of any arithmetic. For example, this doesn’t work well:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bd*2 [bd [sn sn*2 sn] sn]"</span>
+   <span class="o">#</span> <span class="n">speed</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">sine</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>This is because of the rule in Tidal that “the structure comes from the left”, in this example the structure of the sine wave is lost to the structure of the number <code class="highlighter-rouge">2</code>.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="brak" class="tidal-toc-heading">brak</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">brak</span> <span class="o">::</span> <span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p>(The above means that <code class="highlighter-rouge">brak</code> is a function from patterns of any type,
+to a pattern of the same type.)</p>
+
+<p>Make a pattern sound a bit like a breakbeat. It does this by every other cycle, squashing the pattern to fit half a cycle, and offsetting it by a quarter of a cycle.</p>
+
+<p class="render">Example:
+~~~~ haskell
+d1 $ brak $ sound “[feel feel:3, hc:3 hc:2 hc:4 ho:1]”
+~~~~</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="degrade" class="tidal-toc-heading">degrade</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">degrade</span> <span class="o">::</span> <span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p><code class="highlighter-rouge">degrade</code> randomly removes events from a pattern 50% of the time:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">slow</span> <span class="mi">2</span> <span class="o">$</span> <span class="n">degrade</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"[[[feel:5*8,feel*3] feel:3*8], feel*4]"</span>
+   <span class="o">#</span> <span class="n">accelerate</span> <span class="s">"-6"</span>
+   <span class="o">#</span> <span class="n">speed</span> <span class="s">"2"</span>
+</code></pre>
+</div>
+
+<p>The shorthand syntax for <code class="highlighter-rouge">degrade</code> is a question mark: <code class="highlighter-rouge">?</code>. Using <code class="highlighter-rouge">?</code>
+will allow you to randomly remove events from a portion of a pattern:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">slow</span> <span class="mi">2</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bd ~ sn bd ~ bd? [sn bd?] ~"</span>
+</code></pre>
+</div>
+
+<p>You can also use <code class="highlighter-rouge">?</code> to randomly remove events from entire sub-patterns:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">slow</span> <span class="mi">2</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"[[[feel:5*8,feel*3] feel:3*8]?, feel*4]"</span>
+</code></pre>
+</div>
+
+<h3 id="degradeby">degradeBy</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">degradeBy</span> <span class="o">::</span> <span class="kt">Double</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p>Similar to <code class="highlighter-rouge">degrade</code> <code class="highlighter-rouge">degradeBy</code> allows you to control the percentage of events that
+are removed. For example, to remove events 90% of the time:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">slow</span> <span class="mi">2</span> <span class="o">$</span> <span class="n">degradeBy</span> <span class="mf">0.9</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"[[[feel:5*8,feel*3] feel:3*8], feel*4]"</span>
+   <span class="o">#</span> <span class="n">accelerate</span> <span class="s">"-6"</span>
+   <span class="o">#</span> <span class="n">speed</span> <span class="s">"2"</span>
+</code></pre>
+</div>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="fast" class="tidal-toc-heading">fast</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">fast</span> <span class="o">::</span> <span class="kt">Pattern</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p>Speed up a pattern. For example, the following will play the sound
+pattern <code class="highlighter-rouge">"bd sn kurt"</code> twice as fast (i.e. so it repeats twice per
+cycle), and the vowel pattern three times as fast:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">sound</span> <span class="p">(</span><span class="n">fast</span> <span class="mi">2</span> <span class="s">"bd sn kurt"</span><span class="p">)</span>
+   <span class="o">#</span> <span class="n">fast</span> <span class="mi">3</span> <span class="p">(</span><span class="n">vowel</span> <span class="s">"a e o"</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>You can also use this function by its older alias, <code class="highlighter-rouge">density</code>.</p>
+
+<p>See also <a href="#slow">slow</a>.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="fit" class="tidal-toc-heading">fit</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">fit</span> <span class="o">::</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p>The <code class="highlighter-rouge">fit</code> function takes a pattern of integer numbers, which are used to select values from the given list. What makes this a bit strange is that only a given number of values are selected each cycle. For example:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">sound</span> <span class="p">(</span><span class="n">fit</span> <span class="mi">3</span> <span class="p">[</span><span class="s">"bd"</span><span class="p">,</span> <span class="s">"sn"</span><span class="p">,</span> <span class="s">"arpy"</span><span class="p">,</span> <span class="s">"arpy:1"</span><span class="p">,</span> <span class="s">"casio"</span><span class="p">]</span> <span class="s">"0 [~ 1] 2 1"</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>The above fits three samples into the pattern, i.e. for the first cycle this will be <code class="highlighter-rouge">"bd"</code>, <code class="highlighter-rouge">"sn"</code> and <code class="highlighter-rouge">"arpy"</code>, giving the result <code class="highlighter-rouge">"bd [~ sn] arpy sn"</code> (note that we start counting at zero, so that <code class="highlighter-rouge">0</code> picks the first value). The following cycle the <em>next</em> three values in the list will be picked, i.e. <code class="highlighter-rouge">"arpy:1"</code>, <code class="highlighter-rouge">"casio"</code> and <code class="highlighter-rouge">"bd"</code>, giving the pattern <code class="highlighter-rouge">"arpy:1 [~ casio] bd casio"</code> (note that the list wraps round here).</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">fit'</span> <span class="o">::</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p><code class="highlighter-rouge">fit'</code> is a generalization of <code class="highlighter-rouge">fit</code>, where the list is instead constructed by using another integer pattern to slice up a given pattern.  The first argument is the number of cycles of that latter pattern to use when slicing.  It’s easier to understand this with a few examples:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">sound</span> <span class="p">(</span><span class="n">fit'</span> <span class="mi">1</span> <span class="mi">2</span> <span class="s">"0 1"</span> <span class="s">"1 0"</span> <span class="s">"bd sn"</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>So what does this do?  The first <code class="highlighter-rouge">1</code> just tells it to slice up a single cycle of <code class="highlighter-rouge">"bd sn"</code>. The <code class="highlighter-rouge">2</code> tells it to select two values each cycle, just like the first argument to <code class="highlighter-rouge">fit</code>.  The next pattern <code class="highlighter-rouge">"0 1"</code> is the “from” pattern which tells it how to slice, which in this case means <code class="highlighter-rouge">"0"</code> maps to <code class="highlighter-rouge">"bd"</code>, and <code class="highlighter-rouge">"1"</code> maps to <code class="highlighter-rouge">"sn"</code>.  The next pattern <code class="highlighter-rouge">"1 0"</code> is the “to” pattern, which tells it how to rearrange those slices.  So the final result is the pattern <code class="highlighter-rouge">"sn bd"</code>.</p>
+
+<p>A more useful example might be something like</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">fit'</span> <span class="mi">1</span> <span class="mi">4</span> <span class="p">(</span><span class="n">run</span> <span class="mi">4</span><span class="p">)</span> <span class="s">"[0 3*2 2 1 0 3*2 2 [1*8 ~]]/2"</span> <span class="o">$</span> <span class="n">chop</span> <span class="mi">4</span> <span class="o">$</span> <span class="p">(</span><span class="n">sound</span> <span class="s">"breaks152"</span> <span class="o">#</span> <span class="n">unit</span> <span class="s">"c"</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>which uses <code class="highlighter-rouge">chop</code> to break a single sample into individual pieces, which <code class="highlighter-rouge">fit'</code> then puts into a list (using the <code class="highlighter-rouge">run 4</code> pattern) and reassembles according to the complicated integer pattern.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="iter" class="tidal-toc-heading">iter</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">iter</span> <span class="o">::</span> <span class="kt">Pattern</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p>Divides a pattern into a given number of subdivisions, plays the subdivisions
+in order, but increments the starting subdivision each cycle. The pattern
+wraps to the first subdivision after the last subdivision is played.</p>
+
+<p>Example:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">iter</span> <span class="mi">4</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bd hh sn cp"</span>
+</code></pre>
+</div>
+
+<p>This will produce the following over four cycles:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">bd</span> <span class="n">hh</span> <span class="n">sn</span> <span class="n">cp</span>
+<span class="n">hh</span> <span class="n">sn</span> <span class="n">cp</span> <span class="n">bd</span>
+<span class="n">sn</span> <span class="n">cp</span> <span class="n">bd</span> <span class="n">hh</span>
+<span class="n">cp</span> <span class="n">bd</span> <span class="n">hh</span> <span class="n">sn</span>
+</code></pre>
+</div>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="jux-and-juxby" class="tidal-toc-heading">jux (and juxBy)</h1>
+                   <p>The <code class="highlighter-rouge">jux</code> function creates strange stereo effects, by applying a
+function to a pattern, but only in the right-hand channel. For
+example, the following reverses the pattern on the righthand side:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">slow</span> <span class="mi">32</span> <span class="o">$</span> <span class="n">jux</span> <span class="p">(</span><span class="n">rev</span><span class="p">)</span> <span class="o">$</span> <span class="n">striate'</span> <span class="mi">32</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">16</span><span class="p">)</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bev"</span>
+</code></pre>
+</div>
+
+<p>When passing pattern transforms to functions like <code class="highlighter-rouge">jux</code> and <code class="highlighter-rouge">every</code>,
+it’s possible to chain multiple transforms together with <code class="highlighter-rouge">.</code>, for
+example this both reverses and halves the playback speed of the
+pattern in the righthand channel:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">slow</span> <span class="mi">32</span> <span class="o">$</span> <span class="n">jux</span> <span class="p">((</span><span class="o">#</span> <span class="n">speed</span> <span class="s">"0.5"</span><span class="p">)</span> <span class="o">.</span> <span class="n">rev</span><span class="p">)</span> <span class="o">$</span> <span class="n">striate'</span> <span class="mi">32</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">16</span><span class="p">)</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bev"</span>
+</code></pre>
+</div>
+
+<p>With <code class="highlighter-rouge">jux</code>, the original and effected versions of the pattern are
+panned hard left and right (i.e., panned at 0 and 1). This can be a
+bit much, especially when listening on headphones. The variant <code class="highlighter-rouge">juxBy</code>
+has an additional parameter, which brings the channel closer to the
+centre. For example:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">juxBy</span> <span class="mf">0.5</span> <span class="p">(</span><span class="n">fast</span> <span class="mi">2</span><span class="p">)</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bd sn:1"</span>
+</code></pre>
+</div>
+
+<p>In the above, the two versions of the pattern would be panned at 0.25
+and 0.75, rather than 0 and 1.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="linger" class="tidal-toc-heading">linger</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">linger</span> <span class="o">::</span> <span class="kt">Pattern</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p>Similar to <a href="#trunc">trunc</a>, in that it truncates a pattern so that
+only the first fraction of the pattern is played. However unlike
+<code class="highlighter-rouge">trunk</code>, <code class="highlighter-rouge">linger</code> repeats that part to fill the remainder of the cycle.</p>
+
+<p>The following example plays only the first three quarters of the pattern. For example this repeats the first quarter, so you only hear a single repeating note:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">linger</span> <span class="mf">0.25</span> <span class="o">$</span> <span class="n">n</span> <span class="s">"0 2 [3 4] 2"</span> <span class="o">#</span> <span class="n">sound</span> <span class="s">"arpy"</span>
+</code></pre>
+</div>
+
+<p>or slightly more interesting, applied only every fourth cycle:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">every</span> <span class="mi">4</span> <span class="p">(</span><span class="n">linger</span> <span class="mf">0.25</span><span class="p">)</span> <span class="o">$</span> <span class="n">n</span> <span class="s">"0 2 [3 4] 2"</span> <span class="o">#</span> <span class="n">sound</span> <span class="s">"arpy"</span>
+</code></pre>
+</div>
+
+<p>or to a chopped-up sample:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">every</span> <span class="mi">2</span> <span class="p">(</span><span class="n">linger</span> <span class="mf">0.25</span><span class="p">)</span> <span class="o">$</span> <span class="n">loopAt</span> <span class="mi">2</span> <span class="o">$</span> <span class="n">chop</span> <span class="mi">8</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"breaks125"</span>
+</code></pre>
+</div>
+
+<p>You can also pattern the first parameter, for example to cycle through three values, one per cycle:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">trunc</span> <span class="s">"&lt;0.75 0.25 1&gt;"</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bd sn:2 [mt rs] hc"</span>
+</code></pre>
+</div>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">linger</span> <span class="s">"&lt;0.25 0.5 1&gt;"</span> <span class="o">$</span> <span class="n">loopAt</span> <span class="mi">2</span> <span class="o">$</span> <span class="n">chop</span> <span class="mi">8</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"breaks125"</span>
+</code></pre>
+</div>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="beat-rotation" class="tidal-toc-heading">Beat rotation</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="o">&lt;~</span><span class="p">)</span> <span class="o">::</span> <span class="kt">Pattern</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p>or</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="o">~&gt;</span><span class="p">)</span> <span class="o">::</span> <span class="kt">Pattern</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p>(The above means that <code class="highlighter-rouge">&lt;~</code> and <code class="highlighter-rouge">~&gt;</code> are functions that are given a
+time pattern and a pattern of any type, and returns a pattern of the
+same type.)</p>
+
+<p>Shifts a pattern either forward or backward in time.</p>
+
+<p>For example, to shift a pattern by a quarter of a cycle, every fourth cycle:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">every</span> <span class="mi">4</span> <span class="p">(</span><span class="mf">0.25</span> <span class="o">&lt;~</span><span class="p">)</span> <span class="o">$</span> <span class="n">sound</span> <span class="p">(</span><span class="s">"arpy arpy:1 arpy:2 arpy:3"</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">every</span> <span class="mi">4</span> <span class="p">(</span><span class="mf">0.25</span> <span class="o">~&gt;</span><span class="p">)</span> <span class="o">$</span> <span class="n">sound</span> <span class="p">(</span><span class="s">"bd ~ sn:1 [mt ht]"</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Or to alternate between different shifts:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="s">"&lt;0 0.5 0.125&gt;"</span> <span class="o">&lt;~</span> <span class="n">sound</span> <span class="p">(</span><span class="s">"arpy arpy:1 arpy:2 arpy:3"</span><span class="p">)</span>
+</code></pre>
+</div>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="rev" class="tidal-toc-heading">rev</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">rev</span> <span class="o">::</span> <span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p>Reverse every cycle of a pattern. For example:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">slow</span> <span class="mi">2</span> <span class="o">$</span> <span class="n">rev</span> <span class="o">$</span> <span class="n">n</span> <span class="s">"0 1 2 3"</span> <span class="o">#</span> <span class="n">sound</span> <span class="s">"numbers"</span>
+</code></pre>
+</div>
+
+<p>Or in a conditional:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">slow</span> <span class="mi">2</span> <span class="o">$</span> <span class="n">every</span> <span class="mi">3</span> <span class="p">(</span><span class="n">rev</span><span class="p">)</span> <span class="o">$</span> <span class="n">n</span> <span class="s">"0 1 2 3"</span> <span class="o">#</span> <span class="n">sound</span> <span class="s">"numbers"</span>
+</code></pre>
+</div>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="scramble" class="tidal-toc-heading">scramble</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">scramble</span> <span class="o">::</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p><code class="highlighter-rouge">scramble n p</code> divides the pattern <code class="highlighter-rouge">p</code> into <code class="highlighter-rouge">n</code> equal parts, and then creates a new pattern each cycle by randomly selecting
+from the parts. This could also be called “sampling with replacement”.  For example,</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">sound</span> <span class="o">$</span> <span class="n">scramble</span> <span class="mi">3</span> <span class="s">"bd sn hh"</span>
+</code></pre>
+</div>
+
+<p>will sometimes play <code class="highlighter-rouge">"sn bd hh"</code> or <code class="highlighter-rouge">"hh sn bd"</code>, but can also play <code class="highlighter-rouge">"bd sn bd"</code> or <code class="highlighter-rouge">"hh hh hh"</code>, because it can make
+any random combination of the three parts.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="shuffle" class="tidal-toc-heading">shuffle</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">shuffle</span> <span class="o">::</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p><code class="highlighter-rouge">shuffle n p</code> divides the pattern <code class="highlighter-rouge">p</code> into <code class="highlighter-rouge">n</code> equal parts, and then creates a new pattern each cycle by selecting a
+random permutation of those parts. This could also be called “sampling without replacement”.  For example,</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">sound</span> <span class="o">$</span> <span class="n">shuffle</span> <span class="mi">3</span> <span class="s">"bd sn hh"</span>
+</code></pre>
+</div>
+
+<p>will sometimes play <code class="highlighter-rouge">"sn bd hh"</code> or <code class="highlighter-rouge">"hh sn bd"</code> or <code class="highlighter-rouge">"hh bd sn"</code>.  But it can <strong>never</strong> play <code class="highlighter-rouge">"hh hh hh"</code>, because that isn’t
+a permutation of the three parts.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="slow" class="tidal-toc-heading">slow</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">slow</span> <span class="o">::</span> <span class="kt">Pattern</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p>Slow down a pattern.</p>
+
+<p>Example:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">sound</span> <span class="p">(</span><span class="n">slow</span> <span class="mi">2</span> <span class="s">"bd sn kurt"</span><span class="p">)</span>
+   <span class="o">#</span> <span class="n">slow</span> <span class="mi">3</span> <span class="p">(</span><span class="n">vowel</span> <span class="s">"a e o"</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Slow also accepts numbers between 0 and 1, which causes the pattern to speed up:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">sound</span> <span class="p">(</span><span class="n">slow</span> <span class="mf">0.5</span> <span class="s">"bd sn kurt"</span><span class="p">)</span>
+   <span class="o">#</span> <span class="n">slow</span> <span class="mf">0.75</span> <span class="p">(</span><span class="n">vowel</span> <span class="s">"a e o"</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Also, see <a href="#fast">fast</a>.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="smash" class="tidal-toc-heading">smash</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">smash</span> <span class="o">::</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">Time</span><span class="p">]</span> <span class="o">-&gt;</span> <span class="kt">ParamPattern</span> <span class="o">-&gt;</span> <span class="kt">ParamPattern</span>
+</code></pre>
+</div>
+
+<p>Smash is a combination of <code class="highlighter-rouge">spread</code> and <code class="highlighter-rouge">striate</code> - it cuts the samples
+into the given number of bits, and then cuts between playing the loop
+at different speeds according to the values in the list.</p>
+
+<p>So this:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">smash</span> <span class="mi">3</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"ho ho:2 ho:3 hc"</span>
+</code></pre>
+</div>
+
+<p>Is a bit like this:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">slow</span> <span class="s">"&lt;2 3 4&gt;"</span> <span class="o">$</span> <span class="n">striate</span> <span class="mi">3</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"ho ho:2 ho:3 hc"</span>
+</code></pre>
+</div>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="spread" class="tidal-toc-heading">spread</h1>
+                   <p>The <code class="highlighter-rouge">spread</code> function allows you to take a pattern transformation
+which takes a parameter, such as <code class="highlighter-rouge">slow</code>, and provide several
+parameters which are switched between. In other words it ‘spreads’ a
+function across several values.</p>
+
+<p>Taking a simple high hat loop as an example:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"ho ho:2 ho:3 hc"</span>
+</code></pre>
+</div>
+
+<p>We can slow it down by different amounts, such as by a half:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">slow</span> <span class="mi">2</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"ho ho:2 ho:3 hc"</span>
+</code></pre>
+</div>
+
+<p>Or by four thirds (i.e. speeding it up by a third; <code class="highlighter-rouge">4/3</code> means four over
+three):</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">slow</span> <span class="p">(</span><span class="mi">4</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"ho ho:2 ho:3 hc"</span>
+</code></pre>
+</div>
+
+<p>But if we use <code class="highlighter-rouge">spread</code>, we can make a pattern which alternates between
+the two speeds:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">spread</span> <span class="n">slow</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="o">/</span><span class="mi">3</span><span class="p">]</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"ho ho:2 ho:3 hc"</span>
+</code></pre>
+</div>
+
+<p>There is a nice trick you can use here – if you pass ($) as the
+function to spread values over, you can put functions in the list
+instead of values. For example:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">spread</span> <span class="p">(</span><span class="o">$</span><span class="p">)</span> <span class="p">[</span><span class="n">fast</span> <span class="mi">2</span><span class="p">,</span> <span class="n">rev</span><span class="p">,</span> <span class="n">slow</span> <span class="mi">2</span><span class="p">,</span> <span class="n">striate</span> <span class="mi">3</span><span class="p">,</span> <span class="p">(</span><span class="o">#</span> <span class="n">speed</span> <span class="s">"0.8"</span><span class="p">)]</span>
+    <span class="o">$</span> <span class="n">sound</span> <span class="s">"[bd*2 [~ bd]] [sn future]*2 cp jvbass*4"</span>
+</code></pre>
+</div>
+
+<p>Above, the pattern will have these transforms applied to it, one at a time, per cycle:</p>
+
+<ul>
+  <li>cycle 1: <code class="highlighter-rouge">fast 2</code> - pattern will increase in speed</li>
+  <li>cycle 2: <code class="highlighter-rouge">rev</code> - pattern will be reversed</li>
+  <li>cycle 3: <code class="highlighter-rouge">slow 2</code> - pattern will decrease in speed</li>
+  <li>cycle 4: <code class="highlighter-rouge">striate 3</code> - pattern will be granualized</li>
+  <li>cycle 5: <code class="highlighter-rouge">(# speed "0.8")</code> - pattern samples will be played back more slowly</li>
+</ul>
+
+<p>After <code class="highlighter-rouge">(# speed "0.8")</code>, the transforms will repeat and start at <code class="highlighter-rouge">fast 2</code> again.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">spread</span> <span class="o">::</span> <span class="p">(</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">b</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">-&gt;</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">b</span>
+</code></pre>
+</div>
+
+<p>(The above is difficult to describe, if you don’t understand Haskell,
+just ignore it and read the below..)</p>
+
+<p>The <code class="highlighter-rouge">spread</code> function allows you to take a pattern transformation
+which takes a parameter, such as <code class="highlighter-rouge">slow</code>, and provide several
+parameters which are switched between. In other words it ‘spreads’ a
+function across several values.</p>
+
+<p>Taking a simple high hat loop as an example:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"ho ho:2 ho:3 hc"</span>
+</code></pre>
+</div>
+
+<p>We can slow it down by different amounts, such as by a half:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">slow</span> <span class="mi">2</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"ho ho:2 ho:3 hc"</span>
+</code></pre>
+</div>
+
+<p>Or by four thirds (i.e. speeding it up by a third; <code class="highlighter-rouge">4/3</code> means four over
+three):</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">slow</span> <span class="p">(</span><span class="mi">4</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"ho ho:2 ho:3 hc"</span>
+</code></pre>
+</div>
+
+<p>But if we use <code class="highlighter-rouge">spread</code>, we can make a pattern which alternates between
+the two speeds:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">spread</span> <span class="n">slow</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="o">/</span><span class="mi">3</span><span class="p">]</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"ho ho:2 ho:3 hc"</span>
+</code></pre>
+</div>
+
+<p>In recent versions of tidal, you can actually do without the <code class="highlighter-rouge">spread</code> and instead pass a pattern of parameters straight to the function:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">slow</span> <span class="s">"&lt;2 4/3&gt;"</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"ho ho:2 ho:3 hc"</span>
+</code></pre>
+</div>
+
+<p>One advantage of this is that you can provide polyphonic parameters, e.g.:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">slow</span> <span class="s">"&lt;2 4/3, 3&gt;"</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"ho ho:2 ho:3 hc"</span>
+</code></pre>
+</div>
+
+<p>This is quite experimental and might not work with all functions yet.</p>
+
+<p>There’s another version of <code class="highlighter-rouge">spread</code> called <code class="highlighter-rouge">fastspread</code>. True to its name, the result is faster, because it squeezes all the variations into one cycle. As the following gives two parameters to <code class="highlighter-rouge">slow</code>, it goes twice as fast as if you’d used <code class="highlighter-rouge">spread</code>:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">fastspread</span> <span class="n">slow</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="o">/</span><span class="mi">3</span><span class="p">]</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"ho ho:2 ho:3 hc"</span>
+</code></pre>
+</div>
+
+<p>In previous versions of Tidal, <code class="highlighter-rouge">spread</code> was actually the same as <code class="highlighter-rouge">fastspread</code>. Now, <code class="highlighter-rouge">slowspread</code> is an alias of <code class="highlighter-rouge">spread</code>, but you may as well type the latter, as it’s shorter!</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="toscale" class="tidal-toc-heading">toScale</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">toScale</span><span class="o">::</span><span class="p">[</span><span class="kt">Int</span><span class="p">]</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="kt">Int</span>
+</code></pre>
+</div>
+
+<p>The <code class="highlighter-rouge">toScale</code> function lets you turn a pattern of notes within a scale (expressed as a
+list) to note numbers.  For example</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">n</span> <span class="p">(</span><span class="n">toScale</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">]</span> <span class="s">"0 1 2 3"</span><span class="p">)</span> <span class="o">#</span> <span class="n">sound</span> <span class="s">"supermandolin"</span>
+</code></pre>
+</div>
+
+<p>will turn the pattern <code class="highlighter-rouge">"0 1 2 3"</code> into the pattern <code class="highlighter-rouge">"0 4 7 12"</code> by “picking” those notes out of the provided
+scale <code class="highlighter-rouge">[0, 4, 7]</code>.</p>
+
+<p><code class="highlighter-rouge">toScale</code> assumes your scale repeats after a single octave, if it doesn’t you can use a primed version
+<code class="highlighter-rouge">toScale' size</code>.  For example</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">toscale'</span> <span class="mi">24</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">14</span><span class="p">,</span><span class="mi">17</span><span class="p">]</span> <span class="p">(</span><span class="n">run</span> <span class="mi">8</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>turns into <code class="highlighter-rouge">"0 4 7 10 14 17 24 28"</code></p>
+
+<p>A large number of scale and chord names have been provided in the Sound.Tidal.Chords and Sound.Tidal.Scales modules.
+If not already loaded, you can gain access to these with a command like</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Sound.Tidal.Scales</span> <span class="k">as</span> <span class="n">Scales</span>
+</code></pre>
+</div>
+
+<p>and then use them as <code class="highlighter-rouge">Scales.ionian</code>, <code class="highlighter-rouge">Scales.dorian</code>, <code class="highlighter-rouge">Scales.phrygian</code>, etc…</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="trunc" class="tidal-toc-heading">trunc</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">trunc</span> <span class="o">::</span> <span class="kt">Pattern</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p>Truncates a pattern so that only a fraction of the pattern is played. 
+The following example plays only the first three quarters of the pattern:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">trunc</span> <span class="mf">0.75</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bd sn*2 cp hh*4 arpy bd*2 cp bd*2"</span>
+</code></pre>
+</div>
+
+<p>You can also pattern the first parameter, for example to cycle through three values, one per cycle:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">trunc</span> <span class="s">"&lt;0.75 0.25 1&gt;"</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bd sn:2 [mt rs] hc"</span>
+</code></pre>
+</div>
+
+<p>See also <a href="#linger">linger</a>.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="zoom" class="tidal-toc-heading">zoom</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">zoom</span> <span class="o">::</span> <span class="kt">Arc</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p>Plays a portion of a pattern, specified by the beginning and end of a time span (known as an ‘arc’). 
+The new resulting pattern is played over the time period of the original pattern:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">zoom</span> <span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">)</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bd*2 hh*3 [sn bd]*2 drum"</span>
+</code></pre>
+</div>
+
+<p>In the pattern above, <code class="highlighter-rouge">zoom</code> is used with an arc from 25% to 75%. It is equivalent to this pattern:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"hh*3 [sn bd]*2"</span>
+</code></pre>
+</div>
+
+<p>Here’s an example of it being used with a conditional:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">every</span> <span class="mi">4</span> <span class="p">(</span><span class="n">zoom</span> <span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">))</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bd*2 hh*3 [sn bd]*2 drum"</span>
+</code></pre>
+</div>
+
+                </article>
+                
+                
+              </section>
+                
+              <section>
+                <header>
+                  <h1 id="sample" class="tidal-toc-heading">Sample Transformers</h1>
+                </header>
+                 
+                
+                <article>
+                   <p>The following functions manipulate each sample within a pattern, some granularize them, others echo.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="loopat" class="tidal-toc-heading">loopAt</h1>
+                   <p><code class="highlighter-rouge">loopAt</code> makes sample fit the given number of cycles. Internally, it
+works by setting the <code class="highlighter-rouge">unit</code> parameter to “c”, changing the playback
+speed of the sample with the <code class="highlighter-rouge">speed</code> parameter, and setting setting
+the <code class="highlighter-rouge">density</code> of the pattern to match.</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">loopAt</span> <span class="mi">4</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"breaks125"</span>
+</code></pre>
+</div>
+
+<p>It’s a good idea to use this in conjuction with <code class="highlighter-rouge">chop</code>, so the break is chopped into pieces and you don’t have to wait for the whole sample to start/stop.</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">loopAt</span> <span class="mi">4</span> <span class="o">$</span> <span class="n">chop</span> <span class="mi">32</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"breaks125"</span>
+</code></pre>
+</div>
+
+<p>Like all tidal functions, you can mess about with this considerably. The below example shows how you can supply a pattern of cycle counts to loopAt:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">juxBy</span> <span class="mf">0.6</span> <span class="p">(</span><span class="o">|*|</span> <span class="n">speed</span> <span class="s">"2"</span><span class="p">)</span> <span class="o">$</span> <span class="n">loopAt</span> <span class="s">"&lt;4 6 2 3&gt;"</span> <span class="o">$</span> <span class="n">chop</span> <span class="mi">12</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"fm:14"</span>
+</code></pre>
+</div>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="gap" class="tidal-toc-heading">gap</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">gap</span> <span class="o">::</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">ParamPattern</span> <span class="o">-&gt;</span> <span class="kt">ParamPattern</span>
+</code></pre>
+</div>
+
+<p><code class="highlighter-rouge">gap</code> is similar to <code class="highlighter-rouge">chop</code> in that it granualizes every sample in place as it is played, 
+but every other grain is silent. Use an integer value to specify how many granules 
+each sample is chopped into:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">gap</span> <span class="mi">8</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"jvbass"</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">gap</span> <span class="mi">16</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"[jvbass drum:4]"</span>
+</code></pre>
+</div>
+
+<p>You can also provide a pattern here:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">gap</span> <span class="s">"&lt;32 16 8 4&gt;"</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"rave"</span>
+</code></pre>
+</div>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="chop" class="tidal-toc-heading">chop</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">chop</span> <span class="o">::</span> <span class="kt">Pattern</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">ParamPattern</span> <span class="o">-&gt;</span> <span class="kt">ParamPattern</span>
+</code></pre>
+</div>
+
+<p><code class="highlighter-rouge">chop</code> granualizes every sample in place as it is played, turning a pattern of samples into a pattern of sample parts. Use an integer value to specify how many granules each sample is chopped into:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">chop</span> <span class="mi">16</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"arpy ~ feel*2 newnotes"</span>
+</code></pre>
+</div>
+
+<p>You can pattern that first parameter:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">chop</span> <span class="s">"&lt;16 128 32&gt;"</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"arpy ~ feel*2 newnotes"</span>
+</code></pre>
+</div>
+
+<p>You end up with a pattern of the chopped up bits of samples, so for example if you then reverse the pattern, you reverse the order of the bits:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">slow</span> <span class="mi">2</span> <span class="o">$</span> <span class="n">rev</span> <span class="o">$</span> <span class="n">chop</span> <span class="mi">16</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"breaks125"</span>
+</code></pre>
+</div>
+
+<p>Lets try that reverse in just one speaker:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">slow</span> <span class="mi">2</span> <span class="o">$</span> <span class="n">jux</span> <span class="n">rev</span> <span class="o">$</span> <span class="n">chop</span> <span class="mi">16</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"breaks125"</span>
+</code></pre>
+</div>
+
+<p>Different values of <code class="highlighter-rouge">chop</code> can yield very different results, depending
+on the samples used:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">chop</span> <span class="mi">16</span> <span class="o">$</span> <span class="n">sound</span> <span class="p">(</span><span class="n">samples</span> <span class="s">"arpy*8"</span> <span class="p">(</span><span class="n">run</span> <span class="mi">16</span><span class="p">))</span>
+<span class="n">d1</span> <span class="o">$</span> <span class="n">chop</span> <span class="mi">32</span> <span class="o">$</span> <span class="n">sound</span> <span class="p">(</span><span class="n">samples</span> <span class="s">"arpy*8"</span> <span class="p">(</span><span class="n">run</span> <span class="mi">16</span><span class="p">))</span>
+<span class="n">d1</span> <span class="o">$</span> <span class="n">chop</span> <span class="mi">256</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bd*4 [sn cp] [hh future]*2 [cp feel]"</span>
+</code></pre>
+</div>
+
+<p>You can also use chop (or (striate)[#striate]) with very long samples, to cut it into short
+chunks and pattern those chunks. The following cuts a sample into 32 parts, and plays
+it over 8 cycles:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">loopAt</span> <span class="mi">8</span> <span class="o">$</span> <span class="n">chop</span> <span class="mi">32</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bev"</span>
+</code></pre>
+</div>
+
+<p>The <code class="highlighter-rouge">loopAt</code> takes care of changing the speed of sample playback so
+that the sample fits in the given number of cycles.</p>
+
+<p>You can’t hear that the sample has been cut into bits in the above. This becomes more apparent when you do further manipulations of the pattern, for example <code class="highlighter-rouge">rev</code> to reverse the order of the cut up bits:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">loopAt</span> <span class="mi">8</span> <span class="o">$</span> <span class="n">rev</span> <span class="o">$</span> <span class="n">chop</span> <span class="mi">32</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bev"</span>
+</code></pre>
+</div>
+
+<p>See also <a href="#striate">striate</a>.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="striate" class="tidal-toc-heading">striate</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">striate</span> <span class="o">::</span> <span class="kt">Pattern</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">ParamPattern</span> <span class="o">-&gt;</span> <span class="kt">ParamPattern</span>
+</code></pre>
+</div>
+
+<p>Striate is a kind of granulator, cutting samples into bits in a similar to (chop)[#chop], but the resulting bits are organised differently. For example:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">slow</span> <span class="mi">4</span> <span class="o">$</span> <span class="n">striate</span> <span class="mi">16</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"numbers:0 numbers:1 numbers:2 numbers:3"</span>
+</code></pre>
+</div>
+
+<p>This plays the loop the given number of times, but triggering
+progressive portions of each sample. So in this case it plays the loop
+three times, the first time playing the first third of each sample,
+then the second time playing the second third of each sample, etc..
+With the highhat samples in the above example it sounds a bit like
+reverb, but it isn’t really.</p>
+
+<p>Compare this with <code class="highlighter-rouge">chop</code>:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">slow</span> <span class="mi">4</span> <span class="o">$</span> <span class="n">chop</span> <span class="mi">16</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"numbers:0 numbers:1 numbers:2 numbers:3"</span>
+</code></pre>
+</div>
+
+<p>You can hear that the <code class="highlighter-rouge">striate</code> version interlaces the cut up bits of samples together, whereas the <code class="highlighter-rouge">chop</code> version plays each chopped up sample in turn. Here’s the samples without any granulation, in case that helps understand what’s happening in the above:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">slow</span> <span class="mi">4</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"numbers:0 numbers:1 numbers:2 numbers:3"</span>
+</code></pre>
+</div>
+
+<p>The <code class="highlighter-rouge">striate'</code> function is a variant of <code class="highlighter-rouge">striate</code> with an extra
+parameter, which specifies the length of each part. The <code class="highlighter-rouge">striate'</code>
+function still scans across the sample over a single cycle, but if
+each bit is longer, it creates a sort of stuttering effect. For
+example the following will cut the bev sample into 32 parts, but each
+will be 1/16th of a sample long:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">slow</span> <span class="mi">32</span> <span class="o">$</span> <span class="n">striate'</span> <span class="mi">32</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">16</span><span class="p">)</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bev"</span>
+</code></pre>
+</div>
+
+<p>Note that <code class="highlighter-rouge">striate</code> uses the <code class="highlighter-rouge">begin</code> and <code class="highlighter-rouge">end</code> parameters
+internally. This means that if you’re using <code class="highlighter-rouge">striate</code> (or <code class="highlighter-rouge">striate'</code>)
+you probably shouldn’t also specify <code class="highlighter-rouge">begin</code> or <code class="highlighter-rouge">end</code>.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="striatel" class="tidal-toc-heading">striateL</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">striateL</span> <span class="o">::</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">ParamPattern</span> <span class="o">-&gt;</span> <span class="kt">ParamPattern</span>
+</code></pre>
+</div>
+
+<p>Just like <code class="highlighter-rouge">striate</code>, but also loops each sample chunk a number of times specified in the second argument.
+The primed version is just like <code class="highlighter-rouge">striate'</code>, where the loop count is the third argument. For example:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">striateL'</span> <span class="mi">3</span> <span class="mf">0.125</span> <span class="mi">4</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"feel sn:2"</span>
+</code></pre>
+</div>
+
+<p>Like <code class="highlighter-rouge">striate</code>, these use the <code class="highlighter-rouge">begin</code> and <code class="highlighter-rouge">end</code> parameters internally, as well as the <code class="highlighter-rouge">loop</code> parameter for these versions.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="stut" class="tidal-toc-heading">stut</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">stut</span> <span class="o">::</span> <span class="kt">Integer</span> <span class="o">-&gt;</span> <span class="kt">Double</span> <span class="o">-&gt;</span> <span class="kt">Rational</span> <span class="o">-&gt;</span> <span class="kt">ParamPattern</span> <span class="o">-&gt;</span> <span class="kt">ParamPattern</span>
+</code></pre>
+</div>
+
+<p>Stut applies a type of delay to a pattern. It has three parameters, 
+which could be called depth, feedback and time. Depth is an integer
+and the others floating point. This adds a bit of echo:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">stut</span> <span class="mi">4</span> <span class="mf">0.5</span> <span class="mf">0.2</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bd sn"</span>
+</code></pre>
+</div>
+
+<p>The above results in 4 echos, each one 50% quieter than the last, 
+with 1/5th of a cycle between them. It is possible to reverse the echo:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">stut</span> <span class="mi">4</span> <span class="mf">0.5</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.2</span><span class="p">)</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bd sn"</span>
+</code></pre>
+</div>
+
+<h3 id="stut">stut’</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">stut'</span> <span class="o">::</span> <span class="kt">Integer</span> <span class="o">-&gt;</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">ParamPattern</span> <span class="o">-&gt;</span> <span class="kt">ParamPattern</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">ParamPattern</span> <span class="o">-&gt;</span> <span class="kt">ParamPattern</span>
+</code></pre>
+</div>
+
+<p>Instead of just decreasing volume to produce echoes, <code class="highlighter-rouge">stut'</code> allows to apply a function for each step and overlays the result delayed by the given time.</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">stut'</span> <span class="mi">2</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span> <span class="p">(</span><span class="o">#</span> <span class="n">vowel</span> <span class="s">"{a e i o u}%2"</span><span class="p">)</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bd sn"</span>
+</code></pre>
+</div>
+
+<p>In this case there are two <em>overlays</em> delayed by 1/3 of a cycle, where each has the <code class="highlighter-rouge">vowel</code> filter applied.</p>
+
+                </article>
+                
+                
+              </section>
+                
+              <section>
+                <header>
+                  <h1 id="conditional" class="tidal-toc-heading">Conditional Transformers</h1>
+                </header>
+                 
+                
+                <article>
+                   <p>Conditional transformers are functions that apply other transformations under certain cirumstances. These can be based upon the number of cycles, probability or time-range within a pattern.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="somecyclesby" class="tidal-toc-heading">someCyclesBy</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">someCyclesBy</span> <span class="o">::</span> <span class="kt">Double</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p>Similar to <code class="highlighter-rouge">sometimesBy</code>, but applies/doesn’t apply a function on a cycle-by-cycle
+basis instead of event by event.
+Use <code class="highlighter-rouge">someCyclesBy</code> to apply a given function for some cycles, but not for others. 
+For example, the 
+following code results in <code class="highlighter-rouge">fast 2</code> being applied for about 25% of all cycles:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">someCyclesBy</span> <span class="mf">0.25</span> <span class="p">(</span><span class="n">fast</span> <span class="mi">2</span><span class="p">)</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bd*8"</span>
+</code></pre>
+</div>
+
+<p>There is an alias as well:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">someCycles</span> <span class="o">=</span> <span class="n">someCyclesBy</span> <span class="mf">0.5</span>
+</code></pre>
+</div>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="foldevery" class="tidal-toc-heading">foldEvery</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">foldEvery</span> <span class="o">::</span> <span class="p">[</span><span class="kt">Int</span><span class="p">]</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p><code class="highlighter-rouge">foldEvery</code> transforms a pattern with a function, but only for the given number of repetitions. 
+It is similar to chaining multiple <code class="highlighter-rouge">every</code> functions together.</p>
+
+<p>Example:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">foldEvery</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span> <span class="p">(</span><span class="n">fast</span> <span class="mi">2</span><span class="p">)</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bd sn kurt"</span>
+</code></pre>
+</div>
+
+<p>this is equal to:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">every</span> <span class="mi">3</span> <span class="p">(</span><span class="n">fast</span> <span class="mi">2</span><span class="p">)</span> <span class="o">$</span> <span class="n">every</span> <span class="mi">4</span> <span class="p">(</span><span class="n">fast</span> <span class="mi">2</span><span class="p">)</span> <span class="o">$</span> <span class="n">every</span> <span class="mi">5</span> <span class="p">(</span><span class="n">fast</span> <span class="mi">2</span><span class="p">)</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bd sn kurt"</span>
+</code></pre>
+</div>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="ifp" class="tidal-toc-heading">ifp</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">ifp</span> <span class="o">::</span> <span class="p">(</span><span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p>Decide whether to apply one or another function depending on the result of a test function that is passed the current cycle as a number.</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">ifp</span> <span class="p">((</span><span class="o">==</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="p">(</span><span class="n">flip</span> <span class="n">mod</span> <span class="mi">2</span><span class="p">))</span>
+  <span class="p">(</span><span class="n">striate</span> <span class="mi">4</span><span class="p">)</span>
+  <span class="p">(</span><span class="o">#</span> <span class="n">coarse</span> <span class="s">"24 48"</span><span class="p">)</span> <span class="o">$</span>
+  <span class="n">sound</span> <span class="s">"hh hc"</span>
+</code></pre>
+</div>
+
+<p>This will apply <code class="highlighter-rouge">striate 4</code> for every <em>even</em> cycle and aply <code class="highlighter-rouge"># coarse "24 48"</code> for every <em>odd</em>.</p>
+
+<p>Detail: As you can see the test function is arbitrary and does not rely on anything tidal specific. In fact it uses only plain haskell functionality, that is: it calculates the modulo of 2 of the current cycle which is either 0 (for even cycles) or 1. It then compares this value against 0 and returns the result, which is either <code class="highlighter-rouge">True</code> or <code class="highlighter-rouge">False</code>. This is what the <code class="highlighter-rouge">ifp</code> signature’s first part signifies <code class="highlighter-rouge">(Int -&gt; Bool)</code>, a function that takes a whole number and returns either <code class="highlighter-rouge">True</code> or <code class="highlighter-rouge">False</code>.</p>
+
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="mask" class="tidal-toc-heading">mask</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">mask</span> <span class="o">::</span> <span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">b</span>
+</code></pre>
+</div>
+
+<p>Removes events from second pattern that don’t start during an event from first.</p>
+
+<p>Consider this, kind of messy rhythm without any rests.</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">sound</span> <span class="p">(</span><span class="n">cat</span> <span class="p">[</span><span class="s">"sn*8"</span><span class="p">,</span> <span class="s">"[cp*4 bd*4, hc*5]"</span><span class="p">])</span> <span class="o">#</span> <span class="n">n</span> <span class="p">(</span><span class="n">run</span> <span class="mi">8</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>If we apply a mask to it</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">s</span> <span class="p">(</span><span class="n">mask</span> <span class="p">(</span><span class="s">"1 1 1 ~ 1 1 ~ 1"</span> <span class="o">::</span> <span class="kt">Pattern</span> <span class="kt">Bool</span><span class="p">)</span>
+  <span class="p">(</span><span class="n">cat</span> <span class="p">[</span><span class="s">"sn*8"</span><span class="p">,</span> <span class="s">"[cp*4 bd*4, bass*5]"</span><span class="p">]</span> <span class="p">))</span>
+  <span class="o">#</span> <span class="n">n</span> <span class="p">(</span><span class="n">run</span> <span class="mi">8</span><span class="p">)</span> 
+</code></pre>
+</div>
+
+<p>Due to the use of <code class="highlighter-rouge">cat</code> here, the same mask is first applied to <code class="highlighter-rouge">"sn*8"</code> and in the next cycle to `“[cp<em>4 bd</em>4, hc*5]”.</p>
+
+<p>You could achieve the same effect by adding rests within the <code class="highlighter-rouge">cat</code> patterns, but mask allows you to do this more easily. It kind of keeps the rhythmic structure and you can change the used samples independently, e.g.</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">s</span> <span class="p">(</span><span class="n">mask</span> <span class="p">(</span><span class="s">"1 ~ 1 ~ 1 1 ~ 1"</span> <span class="o">::</span> <span class="kt">Pattern</span> <span class="kt">Bool</span><span class="p">)</span>
+  <span class="p">(</span><span class="n">cat</span> <span class="p">[</span><span class="s">"can*8"</span><span class="p">,</span> <span class="s">"[cp*4 sn*4, jvbass*16]"</span><span class="p">]</span> <span class="p">))</span>
+  <span class="o">#</span> <span class="n">n</span> <span class="p">(</span><span class="n">run</span> <span class="mi">8</span><span class="p">)</span> 
+</code></pre>
+</div>
+
+<p>Detail: It is currently needed to explicitly <em>tell</em> Tidal that the mask itself is a <code class="highlighter-rouge">Pattern Bool</code> as it cannot infer this by itself, otherwise it will complain as it does not know how to interpret your input.</p>
+
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="every" class="tidal-toc-heading">every</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">every</span> <span class="o">::</span> <span class="kt">Pattern</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p><code class="highlighter-rouge">every</code> transforms a pattern with a function every ‘n’th cycle, where <code class="highlighter-rouge">n</code> is the value you supply as the first parameter.</p>
+
+<p>For example, to make a pattern twice as fast every third cycle:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">every</span> <span class="mi">3</span> <span class="p">(</span><span class="n">fast</span> <span class="mi">2</span><span class="p">)</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bd sn kurt"</span>
+</code></pre>
+</div>
+
+<p>There is a primed variant with an offset</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">every'</span> <span class="o">::</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p>So <code class="highlighter-rouge">every' 4 0</code> will transform a pattern on cycles 0,4,8,… whereas <code class="highlighter-rouge">every' 4 2</code> will transform the pattern on
+cycles 2,6,10,…</p>
+
+<p>Also, see <code class="highlighter-rouge">whenmod</code>.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="sometimesby" class="tidal-toc-heading">sometimesBy</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">sometimesBy</span> <span class="o">::</span> <span class="kt">Double</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p>Use <code class="highlighter-rouge">sometimesBy</code> to apply a given function “sometimes”. For example, the 
+following code results in <code class="highlighter-rouge">fast 2</code> being applied about 25% of the time:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">sometimesBy</span> <span class="mf">0.25</span> <span class="p">(</span><span class="n">fast</span> <span class="mi">2</span><span class="p">)</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bd*8"</span>
+</code></pre>
+</div>
+
+<p>There are some aliases as well:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">sometimes</span> <span class="o">=</span> <span class="n">sometimesBy</span> <span class="mf">0.5</span>
+<span class="n">often</span> <span class="o">=</span> <span class="n">sometimesBy</span> <span class="mf">0.75</span>
+<span class="n">rarely</span> <span class="o">=</span> <span class="n">sometimesBy</span> <span class="mf">0.25</span>
+<span class="n">almostNever</span> <span class="o">=</span> <span class="n">sometimesBy</span> <span class="mf">0.1</span>
+<span class="n">almostAlways</span> <span class="o">=</span> <span class="n">sometimesBy</span> <span class="mf">0.9</span>
+<span class="n">never</span> <span class="o">=</span> <span class="n">sometimesBy</span> <span class="mi">0</span>
+<span class="n">always</span> <span class="o">=</span> <span class="n">sometimesBy</span> <span class="mi">1</span>
+</code></pre>
+</div>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="swingby" class="tidal-toc-heading">swingBy</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">swingBy</span><span class="o">::</span><span class="kt">Time</span> <span class="o">-&gt;</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p>The function <code class="highlighter-rouge">swingBy x n</code> breaks each cycle into <code class="highlighter-rouge">n</code> slices, and then delays events in the second half of each slice by
+the amount <code class="highlighter-rouge">x</code>, which is relative to the size of the (half) slice. So if <code class="highlighter-rouge">x</code> is <code class="highlighter-rouge">0</code> it does nothing, <code class="highlighter-rouge">0.5</code> delays for 
+half the “note” duration, and <code class="highlighter-rouge">1</code> will wrap around to doing nothing again.
+The end result is a shuffle or swing-like rhythm.  For example</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">swingBy</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span> <span class="mi">4</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"hh*8"</span>
+</code></pre>
+</div>
+
+<p>will delay every other <code class="highlighter-rouge">"hh"</code> 1/3 of the way to the next <code class="highlighter-rouge">"hh"</code>.</p>
+
+<p><code class="highlighter-rouge">swing</code> is an alias for <code class="highlighter-rouge">swingBy (1/3)</code></p>
+
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="when" class="tidal-toc-heading">when</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">when</span> <span class="o">::</span> <span class="p">(</span><span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span><span class="p">)</span> <span class="o">-&gt;</span>  <span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p>Only <code class="highlighter-rouge">when</code> the given test function returns <code class="highlighter-rouge">True</code> the given pattern transformation is applied. The test function will be called with the current cycle as a number.</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">when</span> <span class="p">((</span><span class="n">elem</span> <span class="sc">'4'</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">)</span>
+  <span class="p">(</span><span class="n">striate</span> <span class="mi">4</span><span class="p">)</span>
+  <span class="o">$</span> <span class="n">sound</span> <span class="s">"hh hc"</span>
+</code></pre>
+</div>
+
+<p>The above will only apply <code class="highlighter-rouge">striate 4</code> to the pattern if the current cycle number contains the number 4. So the fourth cycle will be striated and the fourteenth and so on. Expect lots of striates after cycle number 399.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="whenmod" class="tidal-toc-heading">whenmod</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">whenmod</span> <span class="o">::</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p><code class="highlighter-rouge">whenmod</code> has a similar form and behavior to <code class="highlighter-rouge">every</code>, but requires an 
+additional number. Applies the function to the pattern, when the
+remainder of the current loop number divided by the first parameter,
+is greater or equal than the second parameter.</p>
+
+<p>For example the following makes every other block of four loops twice
+as dense:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">whenmod</span> <span class="mi">8</span> <span class="mi">4</span> <span class="p">(</span><span class="n">fast</span> <span class="mi">2</span><span class="p">)</span> <span class="p">(</span><span class="n">sound</span> <span class="s">"bd sn kurt"</span><span class="p">)</span>
+</code></pre>
+</div>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="within" class="tidal-toc-heading">within</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">within</span> <span class="o">::</span> <span class="kt">Arc</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p>Use <code class="highlighter-rouge">within</code> to apply a function to only a part of a pattern. For example, to
+apply <code class="highlighter-rouge">fast 2</code> to only the first half of a pattern:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">within</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span> <span class="p">(</span><span class="n">fast</span> <span class="mi">2</span><span class="p">)</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bd*2 sn lt mt hh hh hh hh"</span>
+</code></pre>
+</div>
+
+<p>Or, to apply `(# speed “0.5”) to only the last quarter of a pattern:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">within</span> <span class="p">(</span><span class="mf">0.75</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="o">#</span> <span class="n">speed</span> <span class="s">"0.5"</span><span class="p">)</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bd*2 sn lt mt hh hh hh hh"</span>
+</code></pre>
+</div>
+
+                </article>
+                
+                
+              </section>
+                
+              <section>
+                <header>
+                  <h1 id="compositions" class="tidal-toc-heading">Compositions</h1>
+                </header>
+                 
+                
+                <article>
+                   <p>Some functions work with multiple sets of patterns, interlace them or play them successively.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="seqp" class="tidal-toc-heading">seqP</h1>
+                   <p>There is a similar function named <code class="highlighter-rouge">seqP</code> which allows you to define when
+a sound within a list starts and ends. The code below contains three
+separate patterns in a “stack”, but each has different start times 
+(zero cycles, eight cycles, and sixteen cycles, respectively). In the example, ll patterns stop after 12 cycles:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">seqP</span> <span class="p">[</span> 
+  <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="n">sound</span> <span class="s">"bd bd*2"</span><span class="p">),</span> 
+  <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="n">sound</span> <span class="s">"hh*2 [sn cp] cp future*4"</span><span class="p">),</span> 
+  <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="n">sound</span> <span class="p">(</span><span class="n">samples</span> <span class="s">"arpy*8"</span> <span class="p">(</span><span class="n">run</span> <span class="mi">16</span><span class="p">)))</span>
+<span class="p">]</span>
+</code></pre>
+</div>
+
+<p>If you run the above, you probably won’t hear anything. This is because cycles start ticking up as soon as you start Tidal, and you have probably already gone part cycle 12.</p>
+
+<p>You can reset the cycle clock back to zero by running <code class="highlighter-rouge">cps (-1)</code> followed by <code class="highlighter-rouge">cps 1</code>, or whatever tempo you want to restart at. Alternatively, you can shift time for the seqP pattern back to zero like this:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="p">(</span><span class="n">pure</span> <span class="n">now</span><span class="p">)</span> <span class="o">~&gt;</span> <span class="n">seqP</span> <span class="p">[</span> 
+  <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="n">sound</span> <span class="s">"bd bd*2"</span><span class="p">),</span> 
+  <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="n">sound</span> <span class="s">"hh*2 [sn cp] cp future*4"</span><span class="p">),</span> 
+  <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="n">sound</span> <span class="p">(</span><span class="n">samples</span> <span class="s">"arpy*8"</span> <span class="p">(</span><span class="n">run</span> <span class="mi">16</span><span class="p">)))</span>
+<span class="p">]</span>
+</code></pre>
+</div>
+
+<p>A third option is to use <code class="highlighter-rouge">seqPLoop</code> instead, which will keep looping the sequence when it gets to the end:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="p">(</span><span class="n">pure</span> <span class="n">now</span><span class="p">)</span> <span class="o">~&gt;</span> <span class="n">seqPLoop</span> <span class="p">[</span> 
+  <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="n">sound</span> <span class="s">"bd bd*2"</span><span class="p">),</span> 
+  <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="n">sound</span> <span class="s">"hh*2 [sn cp] cp future*4"</span><span class="p">),</span> 
+  <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="n">sound</span> <span class="p">(</span><span class="n">samples</span> <span class="s">"arpy*8"</span> <span class="p">(</span><span class="n">run</span> <span class="mi">16</span><span class="p">)))</span>
+<span class="p">]</span>
+</code></pre>
+</div>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="cat" class="tidal-toc-heading">cat</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">cat</span> <span class="o">::</span> <span class="p">[</span><span class="kt">Pattern</span> <span class="n">a</span><span class="p">]</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p><code class="highlighter-rouge">cat</code>, (also known as <code class="highlighter-rouge">slowcat</code>) concatenates a list of patterns into a new pattern; each pattern in the list will maintain its 
+original duration. <code class="highlighter-rouge">cat</code> is similar to <code class="highlighter-rouge">fastcat</code>, except that pattern lengths are not changed. Examples:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">cat</span> <span class="p">[</span><span class="n">sound</span> <span class="s">"bd*2 sn"</span><span class="p">,</span> <span class="n">sound</span> <span class="s">"arpy jvbass*2"</span><span class="p">]</span>
+</code></pre>
+</div>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">cat</span> <span class="p">[</span><span class="n">sound</span> <span class="s">"bd*2 sn"</span><span class="p">,</span> <span class="n">sound</span> <span class="s">"arpy jvbass*2"</span><span class="p">,</span> <span class="n">sound</span> <span class="s">"drum*2"</span><span class="p">]</span>
+</code></pre>
+</div>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">cat</span> <span class="p">[</span><span class="n">sound</span> <span class="s">"bd*2 sn"</span><span class="p">,</span> <span class="n">sound</span> <span class="s">"jvbass*3"</span><span class="p">,</span> <span class="n">sound</span> <span class="s">"drum*2"</span><span class="p">,</span> <span class="n">sound</span> <span class="s">"ht mt"</span><span class="p">]</span>
+</code></pre>
+</div>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="fastcat" class="tidal-toc-heading">fastcat</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">fastcat</span> <span class="o">::</span> <span class="p">[</span><span class="kt">Pattern</span> <span class="n">a</span><span class="p">]</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p><code class="highlighter-rouge">fastcat</code> concatenates a list of patterns into a new pattern. The new pattern’s length will 
+be a single cycle. Note that the more patterns you add to the list, the faster each pattern
+will be played so that all patterns can fit into a single cycle. Examples:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">fastcat</span> <span class="p">[</span><span class="n">sound</span> <span class="s">"bd*2 sn"</span><span class="p">,</span> <span class="n">sound</span> <span class="s">"arpy jvbass*2"</span><span class="p">]</span>
+</code></pre>
+</div>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">fastcat</span> <span class="p">[</span><span class="n">sound</span> <span class="s">"bd*2 sn"</span><span class="p">,</span> <span class="n">sound</span> <span class="s">"arpy jvbass*2"</span><span class="p">,</span> <span class="n">sound</span> <span class="s">"drum*2"</span><span class="p">]</span>
+</code></pre>
+</div>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">fastcat</span> <span class="p">[</span><span class="n">sound</span> <span class="s">"bd*2 sn"</span><span class="p">,</span> <span class="n">sound</span> <span class="s">"jvbass*3"</span><span class="p">,</span> <span class="n">sound</span> <span class="s">"drum*2"</span><span class="p">,</span> <span class="n">sound</span> <span class="s">"ht mt"</span><span class="p">]</span>
+</code></pre>
+</div>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="interlace" class="tidal-toc-heading">interlace</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">interlace</span> <span class="o">::</span> <span class="kt">ParamPattern</span> <span class="o">-&gt;</span> <span class="kt">ParamPattern</span> <span class="o">-&gt;</span> <span class="kt">ParamPattern</span>
+</code></pre>
+</div>
+
+<p>(A function that takes two ParamPatterns, and blends them together into
+a new ParamPattern. A ParamPattern is basically a pattern of messages to
+a synthesiser.)</p>
+
+<p>Shifts between the two given patterns, using distortion.</p>
+
+<p>Example:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">interlace</span> <span class="p">(</span><span class="n">sound</span>  <span class="s">"bd sn kurt"</span><span class="p">)</span> <span class="p">(</span><span class="n">every</span> <span class="mi">3</span> <span class="n">rev</span> <span class="o">$</span> <span class="n">sound</span>  <span class="s">"bd sn:2"</span><span class="p">)</span>
+</code></pre>
+</div>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="randcat" class="tidal-toc-heading">randcat</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">randcat</span> <span class="o">::</span> <span class="p">[</span><span class="kt">Pattern</span> <span class="n">a</span><span class="p">]</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p><code class="highlighter-rouge">randcat</code> is similar to <code class="highlighter-rouge">slowcat</code>, but rather than playing the given
+patterns in order, picks them at random.</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">randcat</span> <span class="p">[</span><span class="n">sound</span> <span class="s">"bd*2 sn"</span><span class="p">,</span> <span class="n">sound</span> <span class="s">"jvbass*3"</span><span class="p">,</span> <span class="n">sound</span> <span class="s">"drum*2"</span><span class="p">,</span> <span class="n">sound</span> <span class="s">"ht mt"</span><span class="p">]</span>
+</code></pre>
+</div>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="append" class="tidal-toc-heading">append</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">append</span> <span class="o">::</span> <span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+<span class="n">append'</span> <span class="o">::</span> <span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p><code class="highlighter-rouge">append</code> combines two patterns into a new pattern, so
+that the events of the second pattern are appended to those of the
+first pattern, within a single cycle.</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">append</span> <span class="p">(</span><span class="n">sound</span> <span class="s">"bd*2 sn"</span><span class="p">)</span> <span class="p">(</span><span class="n">sound</span> <span class="s">"arpy jvbass*2"</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><code class="highlighter-rouge">append'</code> does the same as <code class="highlighter-rouge">append</code>, but over two cycles, so that
+the cycles alternate between the two patterns.</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">append'</span> <span class="p">(</span><span class="n">sound</span> <span class="s">"bd*2 sn"</span><span class="p">)</span> <span class="p">(</span><span class="n">sound</span> <span class="s">"arpy jvbass*2"</span><span class="p">)</span>
+</code></pre>
+</div>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="spin" class="tidal-toc-heading">spin</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">spin</span> <span class="o">::</span> <span class="kt">Int</span> <span class="n">n</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p><code class="highlighter-rouge">spin</code> will “spin” a layer up a pattern the given number of times, with each successive layer offset in time by an additional <code class="highlighter-rouge">1/n</code> of a cycle, and panned by an additional <code class="highlighter-rouge">1/n</code>. The result is a pattern that seems to spin around. This function works best on multichannel systems.</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">slow</span> <span class="mi">3</span> <span class="o">$</span> <span class="n">spin</span> <span class="mi">4</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"drum*3 tabla:4 [arpy:2 ~ arpy] [can:2 can:3]"</span>
+</code></pre>
+</div>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="stack" class="tidal-toc-heading">stack</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">stack</span> <span class="o">::</span> <span class="p">[</span><span class="kt">Pattern</span> <span class="n">a</span><span class="p">]</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p><code class="highlighter-rouge">stack</code> takes a list of patterns and combines them into a new pattern by
+playing all of the patterns in the list simultaneously.</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">stack</span> <span class="p">[</span> 
+  <span class="n">sound</span> <span class="s">"bd bd*2"</span><span class="p">,</span> 
+  <span class="n">sound</span> <span class="s">"hh*2 [sn cp] cp future*4"</span><span class="p">,</span> 
+  <span class="n">sound</span> <span class="p">(</span><span class="n">samples</span> <span class="s">"arpy*8"</span> <span class="p">(</span><span class="n">run</span> <span class="mi">16</span><span class="p">))</span>
+<span class="p">]</span>
+</code></pre>
+</div>
+
+<p>This is useful if you want to use a transform or synth parameter on the entire 
+stack:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">whenmod</span> <span class="mi">5</span> <span class="mi">3</span> <span class="p">(</span><span class="n">striate</span> <span class="mi">3</span><span class="p">)</span> <span class="o">$</span> <span class="n">stack</span> <span class="p">[</span> 
+  <span class="n">sound</span> <span class="s">"bd bd*2"</span><span class="p">,</span> 
+  <span class="n">sound</span> <span class="s">"hh*2 [sn cp] cp future*4"</span><span class="p">,</span> 
+  <span class="n">sound</span> <span class="p">(</span><span class="n">samples</span> <span class="s">"arpy*8"</span> <span class="p">(</span><span class="n">run</span> <span class="mi">16</span><span class="p">))</span>
+<span class="p">]</span> <span class="o">#</span> <span class="n">speed</span> <span class="s">"[[1 0.8], [1.5 2]*2]/3"</span>
+</code></pre>
+</div>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="superimpose" class="tidal-toc-heading">superimpose</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">superimpose</span> <span class="o">::</span> <span class="p">(</span><span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p><code class="highlighter-rouge">superimpose</code> plays a modified version of a pattern at the same time as the original pattern,
+resulting in two patterns being played at the same time.</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">superimpose</span> <span class="p">(</span><span class="n">fast</span> <span class="mi">2</span><span class="p">)</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bd sn [cp ht] hh"</span>
+</code></pre>
+</div>
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">superimpose</span> <span class="p">((</span><span class="o">#</span> <span class="n">speed</span> <span class="s">"2"</span><span class="p">)</span> <span class="o">.</span> <span class="p">(</span><span class="mf">0.125</span> <span class="o">&lt;~</span><span class="p">))</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bd sn cp hh"</span>
+</code></pre>
+</div>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="weave" class="tidal-toc-heading">weave</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">weave</span> <span class="o">::</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="kt">ParamPattern</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">ParamPattern</span><span class="p">]</span> <span class="o">-&gt;</span> <span class="kt">ParamPattern</span>
+<span class="n">weave'</span> <span class="o">::</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="kt">ParamPattern</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">ParamPattern</span> <span class="o">-&gt;</span> <span class="kt">ParamPattern</span><span class="p">]</span> <span class="o">-&gt;</span> <span class="kt">ParamPattern</span>
+</code></pre>
+</div>
+
+<p><code class="highlighter-rouge">weave</code> applies one parameter pattern to an list of other parameter patterns. For example:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">weave</span> <span class="mi">16</span> <span class="p">(</span><span class="n">pan</span> <span class="n">sine</span><span class="p">)</span>
+  <span class="p">[</span><span class="n">sound</span> <span class="s">"bd sn cp"</span><span class="p">,</span>
+   <span class="n">sound</span> <span class="s">"casio casio:1"</span><span class="p">,</span>
+   <span class="n">sound</span> <span class="s">"[jvbass*2 jvbass:2]/2"</span><span class="p">,</span>
+   <span class="n">sound</span> <span class="s">"hc*4"</span>
+  <span class="p">]</span>
+</code></pre>
+</div>
+
+<p>What makes this interesting is that the <code class="highlighter-rouge">pan sine</code> pattern is offset for each of the given <code class="highlighter-rouge">sound</code> patterns. The <code class="highlighter-rouge">pan sine</code> is slowed down by the given number of cycles <code class="highlighter-rouge">16</code>, and because the patterns are offset, they seem to chase after each other around the stereo field. Try listening on headphones.</p>
+
+<p>You can have it the other way round, and have the effect parameters chasing after each other around a <code class="highlighter-rouge">sound</code> parameter, like this:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">weave</span> <span class="mi">16</span> <span class="p">(</span><span class="n">sound</span> <span class="s">"arpy*8"</span> <span class="o">#</span> <span class="n">n</span> <span class="p">(</span><span class="n">run</span> <span class="mi">8</span><span class="p">))</span>
+  <span class="p">[</span><span class="n">vowel</span> <span class="s">"a e i"</span><span class="p">,</span>
+   <span class="n">vowel</span> <span class="s">"i [i o] o u"</span><span class="p">,</span>
+   <span class="n">vowel</span> <span class="s">"[e o]/3 [i o u]/2"</span><span class="p">,</span>
+   <span class="n">speed</span> <span class="s">"1 2 3"</span>
+  <span class="p">]</span>
+</code></pre>
+</div>
+
+<p><code class="highlighter-rouge">weave'</code> is similar in that it blends functions at the same time at different amounts over a pattern:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">weave'</span> <span class="mi">3</span> <span class="p">(</span><span class="n">sound</span> <span class="s">"bd [sn drum:2*2] bd*2 [sn drum:1]"</span><span class="p">)</span> <span class="p">[</span><span class="n">fast</span> <span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="o">#</span> <span class="n">speed</span> <span class="s">"0.5"</span><span class="p">),</span> <span class="n">chop</span> <span class="mi">16</span><span class="p">]</span>
+</code></pre>
+</div>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="wedge" class="tidal-toc-heading">wedge</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">wedge</span> <span class="o">::</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p><code class="highlighter-rouge">wedge</code> combines two patterns by squashing two patterns into a single pattern cycle.
+It takes a ratio as the first argument. The ratio determines what percentage of the
+pattern cycle is taken up by the first pattern. The second pattern fills in the
+remainder of the pattern cycle.</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">wedge</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">4</span><span class="p">)</span> <span class="p">(</span><span class="n">sound</span> <span class="s">"bd*2 arpy*3 cp sn*2"</span><span class="p">)</span> <span class="p">(</span><span class="n">sound</span> <span class="s">"odx [feel future]*2 hh hh"</span><span class="p">)</span>
+</code></pre>
+</div>
+
+                </article>
+                
+                
+              </section>
+                
+              <section>
+                <header>
+                  <h1 id="transitions" class="tidal-toc-heading">Transitions</h1>
+                </header>
+                 
+                
+                <article>
+                  
+                  <h1 id="anticipate" class="tidal-toc-heading">anticipate</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">anticipate</span> <span class="o">::</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">ParamPattern</span><span class="p">]</span> <span class="o">-&gt;</span> <span class="kt">ParamPattern</span>
+</code></pre>
+</div>
+
+<p>Build up some tension, culminating in a <em>drop</em> to the new pattern after 8 cycles.</p>
+
+<h3 id="anticipatein">anticipateIn</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">anticipateIn</span> <span class="o">::</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">ParamPattern</span><span class="p">]</span> <span class="o">-&gt;</span> <span class="kt">ParamPattern</span>
+</code></pre>
+</div>
+
+<p>same as <code class="highlighter-rouge">anticipate</code> though it allows you to specify the number of cycles until dropping to the new pattern, e.g.:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"jvbass(3,8)"</span>
+
+<span class="n">t1</span> <span class="p">(</span><span class="n">anticipateIn</span> <span class="mi">4</span><span class="p">)</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"jvbass(5,8)"</span>
+</code></pre>
+</div>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="clutch" class="tidal-toc-heading">clutch</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">clutch</span> <span class="o">::</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">Pattern</span> <span class="n">a</span><span class="p">]</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p>Degrades the current pattern while undegrading the next.</p>
+
+<p>This is like <code class="highlighter-rouge">xfade</code> but not by gain of samples but by randomly removing events from the current pattern and slowly adding back in missing events from the next one.</p>
+
+<div class="render-lines-4 highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bd(3,8)"</span>
+
+<span class="n">t1</span> <span class="n">clutch</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"[hh*4, odx(3,8)]"</span>
+</code></pre>
+</div>
+
+<p><code class="highlighter-rouge">clutch</code> takes two cycles for the transition, essentially this is <code class="highlighter-rouge">clutchIn 2</code>.</p>
+
+<h3 id="clutchin">clutchIn</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">clutchIn</span> <span class="o">::</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">Pattern</span> <span class="n">a</span><span class="p">]</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p>Also degrades the current pattern and undegrades the next.
+To change the number of cycles the transition takes, you can use <code class="highlighter-rouge">clutchIn</code> like so:</p>
+
+<div class="render-lines-4 highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bd(5,8)"</span>
+
+<span class="n">t1</span> <span class="p">(</span><span class="n">clutchIn</span> <span class="mi">8</span><span class="p">)</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"[hh*4, odx(3,8)]"</span>
+</code></pre>
+</div>
+
+<p>will take 8 cycles for the transition.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="histpan" class="tidal-toc-heading">histpan</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">histpan</span> <span class="o">::</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">ParamPattern</span><span class="p">]</span> <span class="o">-&gt;</span> <span class="kt">ParamPattern</span>
+</code></pre>
+</div>
+
+<p>Pans the last n versions of the pattern across the field</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="jump" class="tidal-toc-heading">jump</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">jump</span> <span class="o">::</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">ParamPattern</span><span class="p">]</span> <span class="o">-&gt;</span> <span class="kt">ParamPattern</span>
+</code></pre>
+</div>
+
+<p>Jumps directly into the given pattern, this is essentially the <em>no transition</em>-transition.</p>
+
+<p>Variants of <code class="highlighter-rouge">jump</code> provide more useful capabilities, see <code class="highlighter-rouge">jumpIn</code> and <code class="highlighter-rouge">jumpMod</code></p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="jumpin" class="tidal-toc-heading">jumpIn</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">jumpIn</span> <span class="o">::</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">ParamPattern</span><span class="p">]</span> <span class="o">-&gt;</span> <span class="kt">ParamPattern</span>
+</code></pre>
+</div>
+
+<p>Does a sharp “jump” cut transition after the specified number of cycles have passed.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="jumpin" class="tidal-toc-heading">jumpIn'</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">jumpIn'</span> <span class="o">::</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">ParamPattern</span><span class="p">]</span> <span class="o">-&gt;</span> <span class="kt">ParamPattern</span>
+</code></pre>
+</div>
+
+<p>Does a sharp “jump” cut transition after at least the specified number of cycles have passed, but only transitions at a cycle boundary (e.g. when the cycle count is an integer)</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="jumpmod" class="tidal-toc-heading">jumpMod</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">jumpMod</span> <span class="o">::</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">ParamPattern</span><span class="p">]</span> <span class="o">-&gt;</span> <span class="kt">ParamPattern</span>
+</code></pre>
+</div>
+
+<p>Does a sharp “jump” cut transition the next time the cycle count modulo the given integer is zero.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="mortal" class="tidal-toc-heading">mortal</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">mortal</span> <span class="o">::</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">ParamPattern</span><span class="p">]</span> <span class="o">-&gt;</span> <span class="kt">ParamPattern</span>
+</code></pre>
+</div>
+
+<p>Degrade the new pattern over time until it ends in silence</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="superwash" class="tidal-toc-heading">superwash</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">superwash</span> <span class="o">::</span> <span class="p">(</span><span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">Pattern</span> <span class="n">a</span><span class="p">]</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p>A generalization of <code class="highlighter-rouge">wash</code>. Washes away the current pattern after a certain delay by applying a function to it over time, then switching over to the next pattern to which another function is applied.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"feel*4 [feel:2 sn:2]"</span>
+
+<span class="n">t1</span> <span class="p">(</span><span class="n">superwash</span> <span class="p">(</span><span class="o">#</span> <span class="n">accelerate</span> <span class="s">"4 2 -2 -4"</span><span class="p">)</span> <span class="p">(</span><span class="n">striate</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">1</span> <span class="mi">4</span> <span class="mi">6</span><span class="p">)</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bd [odx:2 sn/2]"</span>
+</code></pre>
+</div>
+
+<p>Note that after one cycle <code class="highlighter-rouge"># accelerate "4 2 -2 -4"</code> is applied to <code class="highlighter-rouge">sound "feel*4 [feel:2 sn:2]"</code> for 4 cycles and then the whole pattern is replaced by <code class="highlighter-rouge">sound "bd [odx:2 sn/2]"</code> and <code class="highlighter-rouge">striate 2</code> is applied to it for 6 cycles. Afterwards <code class="highlighter-rouge">sound "bd [odx:2 sn/2]"</code> is played normally.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="wait" class="tidal-toc-heading">wait</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">wait</span> <span class="o">::</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">ParamPattern</span><span class="p">]</span> <span class="o">-&gt;</span> <span class="kt">ParamPattern</span>
+</code></pre>
+</div>
+
+<p>Just stop for a bit before playing new pattern</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="wash" class="tidal-toc-heading">wash</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">wash</span> <span class="o">::</span> <span class="p">(</span><span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">Pattern</span> <span class="n">a</span><span class="p">]</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span>
+</code></pre>
+</div>
+
+<p>Wash away the current pattern by applying a function to it over time, then switching over to the next.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"feel ! feel:1 feel:2"</span>
+
+<span class="n">t1</span> <span class="p">(</span><span class="n">wash</span> <span class="p">(</span><span class="n">chop</span> <span class="mi">8</span><span class="p">)</span> <span class="mi">4</span><span class="p">)</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"feel*4 [feel:2 sn:2]"</span>
+</code></pre>
+</div>
+
+<p>Note that <code class="highlighter-rouge">chop 8</code> is applied to <code class="highlighter-rouge">sound "feel ! feel:1 feel:2"</code> for 4 cycles and then the whole pattern is replaced by <code class="highlighter-rouge">sound "feel*4 [feel:2 sn:2]</code></p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="xfade" class="tidal-toc-heading">xfade</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">xfade</span> <span class="o">::</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">ParamPattern</span><span class="p">]</span> <span class="o">-&gt;</span> <span class="kt">ParamPattern</span>
+</code></pre>
+</div>
+
+<p>Crossfade between old and new pattern over the next two cycles.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bd sn"</span>
+
+<span class="n">t1</span> <span class="n">xfade</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"can*3"</span>
+</code></pre>
+</div>
+
+<p><code class="highlighter-rouge">xfade</code> is essentially <code class="highlighter-rouge">xfadeIn 2</code> so you can also specify how many cycles you want the transition to take:</p>
+
+<h3 id="xfadein">xfadeIn</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">xfadeIn</span> <span class="o">::</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">ParamPattern</span><span class="p">]</span> <span class="o">-&gt;</span> <span class="kt">ParamPattern</span>
+</code></pre>
+</div>
+
+<p>crossfades between old and new pattern over given number of cycles, e.g.:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bd sn"</span>
+
+<span class="n">t1</span> <span class="p">(</span><span class="n">xfadeIn</span> <span class="mi">16</span><span class="p">)</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"jvbass*3"</span>
+</code></pre>
+</div>
+
+<p>Will fade over 16 cycles from “bd sn” to “jvbass*3”</p>
+
+                </article>
+                
+                
+              </section>
+                
+              <section>
+                <header>
+                  <h1 id="synth_parameters" class="tidal-toc-heading">Synth Parameters</h1>
+                </header>
+                 
+                
+                <article>
+                   <p>In general, synth parameters specify patterns of sounds, and patterns
+of effects on those sounds. These are synthesis parameters you can
+use with the default SuperDirt synth or Classic Dirt:</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="hcutoff" class="tidal-toc-heading">hcutoff</h1>
+                   <p>a pattern of numbers. In SuperDirt, this is in Hz (try a range between 0 and 8000). In classic dirt, it is from 0 to 1. Sets the center frequency of the band-pass filter. Applies the cutoff frequency of the high-pass filter. Has the shorthand form <code class="highlighter-rouge">hpf</code>.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="bandf" class="tidal-toc-heading">bandf</h1>
+                   <p>a pattern of numbers. In SuperDirt, this is in Hz (try a range between 0 and 6000). In classic dirt, it is from 0 to 1. Sets the center frequency of the band-pass filter. Has the shorthand <code class="highlighter-rouge">bpf</code>.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="bandq" class="tidal-toc-heading">bandq</h1>
+                   <p>a pattern of numbers that set the q-factor of the band-pass filter.  Higher values (larger than 1) narrow the band-pass. Has the shorthand <code class="highlighter-rouge">bpq</code>.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="begin" class="tidal-toc-heading">begin</h1>
+                   <p>a pattern of numbers from 0 to 1. Skips the beginning of each sample, e.g. <code class="highlighter-rouge">0.25</code> to cut off the first quarter from each sample.</p>
+
+<p>In Classic Dirt, using <code class="highlighter-rouge">begin "-1"</code> combined with <code class="highlighter-rouge">cut "-1"</code> means that when the sample cuts itself it will begin playback from where the previous one left off, so it will sound like one seamless sample. This allows you to apply a synth param across a long sample in a way similar to <code class="highlighter-rouge">chop</code>:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">cps</span> <span class="mf">0.5</span>
+
+<span class="n">d1</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"breaks125*8"</span> <span class="o">#</span> <span class="n">unit</span> <span class="s">"c"</span> <span class="o">#</span> <span class="n">begin</span> <span class="s">"-1"</span> <span class="o">#</span> <span class="n">cut</span> <span class="s">"-1"</span> <span class="o">#</span> <span class="n">coarse</span> <span class="s">"1 2 4 8 16 32 64 128"</span>
+</code></pre>
+</div>
+
+<p>This will play the <code class="highlighter-rouge">breaks125</code> sample and apply the changing <code class="highlighter-rouge">coarse</code> parameter over the sample. Compare to:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="p">(</span><span class="n">chop</span> <span class="mi">8</span> <span class="o">$</span> <span class="n">sounds</span> <span class="s">"breaks125"</span><span class="p">)</span> <span class="o">#</span> <span class="n">unit</span> <span class="s">"c"</span> <span class="o">#</span> <span class="n">coarse</span> <span class="s">"1 2 4 8 16 32 64 128"</span>
+</code></pre>
+</div>
+
+<p>which performs a similar effect, but due to differences in implementation sounds different.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="coarse" class="tidal-toc-heading">coarse</h1>
+                   <p>fake-resampling, a pattern of numbers for lowering the sample rate, i.e. 1 for original 2 for half, 3 for a third and so on.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="crush" class="tidal-toc-heading">crush</h1>
+                   <p>bit crushing, a pattern of numbers from 1 for drastic reduction in bit-depth to 16 for barely no reduction.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="cut" class="tidal-toc-heading">cut</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">cut</span> <span class="o">::</span> <span class="kt">Pattern</span> <span class="kt">Int</span> <span class="o">-&gt;</span> <span class="kt">ParamPattern</span>
+</code></pre>
+</div>
+
+<p>In the style of classic drum-machines, <code class="highlighter-rouge">cut</code> will stop a playing sample as soon as another samples with in same cutgroup is to be played.</p>
+
+<p>An example would be an open hi-hat followed by a closed one, essentially muting the open.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">stack</span> <span class="p">[</span>
+  <span class="n">sound</span> <span class="s">"bd"</span><span class="p">,</span>
+  <span class="n">sound</span> <span class="s">"~ [~ [ho:2 hc/2]]"</span> <span class="o">#</span> <span class="n">cut</span> <span class="s">"1"</span>
+  <span class="p">]</span>
+</code></pre>
+</div>
+
+<p>This will mute the open hi-hat every second cycle when the closed one is played.</p>
+
+<p>Using <code class="highlighter-rouge">cut</code> with negative values will only cut the same sample. This is useful to cut very long samples</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"[bev, [ho:3](3,8)]"</span> <span class="o">#</span> <span class="n">cut</span> <span class="s">"-1"</span>
+</code></pre>
+</div>
+
+<p>Using <code class="highlighter-rouge">cut "0"</code> is effectively <em>no</em> cutgroup.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="cutoff" class="tidal-toc-heading">cutoff</h1>
+                   <p>a pattern of numbers. In SuperDirt, this is in Hz (try a range between
+0 and 6000). In classic dirt, it is from 0 to 1. Applies the cutoff
+frequency of the low-pass filter. Has the shorthand form <code class="highlighter-rouge">lpf</code>.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="delay" class="tidal-toc-heading">delay</h1>
+                   <p>a pattern of numbers that set the initial level of the delay signal.  I.e. a value of one means the first echo will be as
+loud as the original sound.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="delayfeedback" class="tidal-toc-heading">delayfeedback</h1>
+                   <p>a pattern of numbers from 0 to 1. Sets the amount of delay feedback.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="delaytime" class="tidal-toc-heading">delaytime</h1>
+                   <p>a pattern of numbers from 0 to 1. Sets the length of the delay.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="end" class="tidal-toc-heading">end</h1>
+                   <p>the same as <code class="highlighter-rouge">begin</code>, but cuts the end off samples, shortening them;
+  e.g. <code class="highlighter-rouge">0.75</code> to cut off the last quarter of each sample.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="gain" class="tidal-toc-heading">gain</h1>
+                   <p>a pattern of numbers that specify volume. Values less than 1 make the sound quieter. Values greater than 1 make the sound louder.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="accelerate" class="tidal-toc-heading">accelerate</h1>
+                   <p>a pattern of numbers that speed up (or slow down) samples while they play.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="hresonance" class="tidal-toc-heading">hresonance</h1>
+                   <p>a pattern of numbers from 0 to 1. Applies the resonance of the high-pass filter. Has the shorthand form <code class="highlighter-rouge">hpq</code>.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="legato" class="tidal-toc-heading">legato</h1>
+                   <p>Controls the length of the sound (called <code class="highlighter-rouge">sustain</code>) relative to its “space” in the pattern - the time from the beginning of one
+sound in the pattern to the beginning of the next - also known as the “inter-onset time”<sup>1</sup>.</p>
+
+<p><code class="highlighter-rouge">legato "1"</code> means the sound will play for the duration of its “space” and then stop playing.  For example</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"[[rave rave] rave]"</span> <span class="o">#</span> <span class="n">legato</span> <span class="s">"1"</span>
+</code></pre>
+</div>
+
+<p>will play the first two sounds for 1/4 of a cycle, and the third for 1/2 of a cycle.  Other values of <code class="highlighter-rouge">legato</code> will
+multiply that duration, such that values greater than 1 will cause the sounds to overlap, and values less than one will
+cause the sounds to end before the next one begins.</p>
+
+<p>For softsynths, leaving <code class="highlighter-rouge">legato</code> unspecified causes SuperDirt to default to <code class="highlighter-rouge">legato "1"</code>.</p>
+
+<p>For samples, when leaving <code class="highlighter-rouge">legato</code> unspecified SuperDirt will play the sample for its full duration, whatever that might be.</p>
+
+<p>See also the <a href="sustain.md"><code class="highlighter-rouge">sustain</code> parameter</a>.</p>
+
+<p> </p>
+
+<p>sound), but you can use the <code class="highlighter-rouge">delta</code> parameter to override this and control it directly.  The user-provided <code class="highlighter-rouge">delta</code> will then 
+be multiplied by <code class="highlighter-rouge">legato</code> (if provided) as normal.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="loop" class="tidal-toc-heading">loop</h1>
+                   <p>loops the sample (from <code class="highlighter-rouge">begin</code> to <code class="highlighter-rouge">end</code>) the specified number of times.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="nudge" class="tidal-toc-heading">nudge</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">nudge</span> <span class="o">::</span> <span class="kt">Pattern</span> <span class="kt">Double</span> <span class="o">-&gt;</span> <span class="kt">ParamPattern</span>
+</code></pre>
+</div>
+
+<p>Pushes things forward (or backwards within built-in latency) in time. Allows for nice things like <em>swing</em> feeling:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">stack</span> <span class="p">[</span>
+  <span class="n">sound</span> <span class="s">"bd bd/4"</span><span class="p">,</span>
+  <span class="n">sound</span> <span class="s">"hh(5,8)"</span>
+  <span class="p">]</span> <span class="o">#</span> <span class="n">nudge</span> <span class="s">"[0 0.04]*4"</span>
+</code></pre>
+</div>
+
+<p>Low values will give a more <em>human</em> feeling, high values might result in quite the contrary.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="pan" class="tidal-toc-heading">pan</h1>
+                   <p>a pattern of numbers between 0 and 1, from left to right (assuming stereo)</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="resonance" class="tidal-toc-heading">resonance</h1>
+                   <p>a pattern of numbers from 0 to 1. Applies the resonance of the low-pass filter. Has the shorthand form <code class="highlighter-rouge">lpq</code>.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="room-and-size" class="tidal-toc-heading">room and size</h1>
+                   <p>Both <code class="highlighter-rouge">room</code> and <code class="highlighter-rouge">size</code> are patterns of numbers, representing the amount
+of input into the reverb unit, and notional size of the room
+respectively. These are only available in SuperDirt (not classic dirt)
+and is a fully working but experimental feature which may change in
+the future.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="shape" class="tidal-toc-heading">shape</h1>
+                   <p>wave shaping distortion, a pattern of numbers from 0 for no distortion up to 1 for loads of distortion</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="sound" class="tidal-toc-heading">sound</h1>
+                   <p>a pattern of strings representing sound sample names (required)</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="speed" class="tidal-toc-heading">speed</h1>
+                   <p>A pattern of numbers which multiplies the speed of sample playback, where <code class="highlighter-rouge">1</code> means normal speed.  Can be used as a cheap way
+of changing pitch for samples.  Negative numbers will cause the sample to be played backwards.</p>
+
+<p>When using this method to alter sample pitch, there’s a convenience parameter <code class="highlighter-rouge">up</code>, which uses units of semitones instead of
+multiplicative values.  For example,</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">s</span> <span class="s">"arpy*4"</span> <span class="o">#</span> <span class="n">up</span> <span class="s">"0 4 7 0"</span>
+</code></pre>
+</div>
+
+<p>will play the “arpy” sample at the orginal speed, then up 4 semitones (a third), then up 7 semitones (a fifth), 
+then once more at the original speed.</p>
+
+<p>The behavior of <code class="highlighter-rouge">speed</code> can also be changed by the <a href="unit"><code class="highlighter-rouge">unit</code> parameter</a>.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="sustain" class="tidal-toc-heading">sustain</h1>
+                   <p>Sets the duration of the sound in seconds.  Primarily used in SuperDirt for softsynths, but can be used for samples as well.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="unit" class="tidal-toc-heading">unit</h1>
+                   <p>accepts values of “r” (default), “c”, or “s”, which controls how the <code class="highlighter-rouge">speed</code> parameter is interpreted.</p>
+
+<p>With <code class="highlighter-rouge">unit "r"</code>, <code class="highlighter-rouge">speed</code> multiplies the sample playback rate, so <code class="highlighter-rouge">1</code> is normal speed, <code class="highlighter-rouge">2</code> is double speed, <code class="highlighter-rouge">0.5</code> half
+speed, etc.</p>
+
+<p>With <code class="highlighter-rouge">unit "c"</code>, <code class="highlighter-rouge">speed</code> specifies the playback rate <em>relative to cycle length</em>.  So <code class="highlighter-rouge">unit "c" # speed "1"</code> will speed up or 
+slow down the sample to fit in one cycle, <code class="highlighter-rouge">unit "c" # speed "2"</code> will play the sample twice as fast (so that it fits in half
+a cycle), etc.  This can be useful for beat matching if your sample is a drum loop.</p>
+
+<p>With <code class="highlighter-rouge">unit "s"</code>, <code class="highlighter-rouge">speed</code> specifies the playback <em>length</em> in seconds.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="vowel" class="tidal-toc-heading">vowel</h1>
+                   <p>formant filter to make things sound like vowels, a pattern of either <code class="highlighter-rouge">a</code>, <code class="highlighter-rouge">e</code>, <code class="highlighter-rouge">i</code>, <code class="highlighter-rouge">o</code> or <code class="highlighter-rouge">u</code>. Use a rest (<code class="highlighter-rouge">~</code>) for no effect.</p>
+
+                </article>
+                
+                
+              </section>
+                
+              <section>
+                <header>
+                  <h1 id="combining_parameters" class="tidal-toc-heading">Combining Parameters</h1>
+                </header>
+                 
+                
+                <article>
+                   <p>Most often, parameters are composed together into synth messages using
+the <code class="highlighter-rouge">#</code> operator. Using <code class="highlighter-rouge">#</code>, if you specify the same parameter more
+than once, you will replace previous values. For example, in the
+following the rightmost speed value of <code class="highlighter-rouge">2</code> is what gets used, and the
+value of <code class="highlighter-rouge">3</code> is ignored:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bd sn:2"</span> <span class="o">#</span> <span class="n">speed</span> <span class="s">"3"</span> <span class="o">#</span> <span class="n">speed</span> <span class="s">"2"</span>
+</code></pre>
+</div>
+
+<p>Actually, <code class="highlighter-rouge">#</code> is shorthand for the <code class="highlighter-rouge">|=|</code> operator, and there are a few
+others which behave a bit differently. For example instead of
+replacing values, the <code class="highlighter-rouge">|+|</code> operator adds them together. For example
+the following ends up with a value of <code class="highlighter-rouge">5</code>.</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bd sn:2"</span> <span class="o">#</span> <span class="n">speed</span> <span class="s">"3"</span> <span class="o">|+|</span> <span class="n">speed</span> <span class="s">"2"</span>
+</code></pre>
+</div>
+
+<p>There also exists <code class="highlighter-rouge">|*|</code>, <code class="highlighter-rouge">|/|</code> and <code class="highlighter-rouge">|-|</code> operators which multiply,
+divide and subtract the values, as you might expect. Here’s a pattern
+which adds values taken from a sine fucntion to a speed pattern:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">every</span> <span class="mi">2</span> <span class="p">(</span><span class="o">|+|</span> <span class="n">speed</span> <span class="n">sine1</span><span class="p">)</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bd*2"</span> <span class="o">#</span> <span class="n">speed</span> <span class="s">"1 2"</span>
+</code></pre>
+</div>
+
+<p>The <code class="highlighter-rouge">|+|</code> <code class="highlighter-rouge">|-|</code> <code class="highlighter-rouge">|/|</code> and <code class="highlighter-rouge">|*|</code> operators only exhibit this behaviour
+with numerical pattern parameters.</p>
+
+                </article>
+                
+                
+              </section>
+                
+              <section>
+                <header>
+                  <h1 id="operators" class="tidal-toc-heading">Operators</h1>
+                </header>
+                 
+                
+                <article>
+                   <h3 id="specific-to-tidal">specific to Tidal</h3>
+
+<p>The general rule for things that combine patterns is that they use the structure of the pattern on the <em>left</em>.</p>
+
+<h4 id="section"><code class="highlighter-rouge">|+|</code>, <code class="highlighter-rouge">|*|</code>, <code class="highlighter-rouge">|-|</code>, <code class="highlighter-rouge">|/|</code></h4>
+<p>Operate on <em>ParamPatterns</em>, and perform the arithmetic operation if the two parameters are the same (such as <code class="highlighter-rouge">speed</code> and <code class="highlighter-rouge">speed</code>), or simply merge the parameters just as <code class="highlighter-rouge">#</code> would if the parameters are different.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">speed</span> <span class="s">"1 2 3 4"</span> <span class="o">|+|</span> <span class="n">speed</span> <span class="s">"2"</span> 
+</code></pre>
+</div>
+
+<p>is the same as</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">speed</span> <span class="s">"3 4 5 6"</span>
+</code></pre>
+</div>
+
+<h4 id="section-1"><code class="highlighter-rouge">#</code>, <code class="highlighter-rouge">|=|</code></h4>
+<p>They mean the same thing: they merge <em>ParamPatterns</em> together</p>
+
+<h4 id="section-2"><code class="highlighter-rouge">###</code>, <code class="highlighter-rouge">***</code>, <code class="highlighter-rouge">+++</code>, <code class="highlighter-rouge">///</code></h4>
+<p>These take a <strong>list</strong> of <em>ParamPatterns</em> as their second argument, and merge them all together with the relevant arithmetic operator.  Can simplify long expressions.</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">s</span> <span class="s">"bd sn"</span> <span class="o">#</span> <span class="n">speed</span> <span class="s">"1.2"</span> <span class="o">***</span> <span class="p">[</span><span class="n">speed</span> <span class="s">"2"</span><span class="p">,</span> <span class="n">crush</span> <span class="s">"4"</span><span class="p">]</span>
+</code></pre>
+</div>
+
+<h4 id="section-3"><code class="highlighter-rouge">&lt;~</code>, <code class="highlighter-rouge">~&gt;</code></h4>
+<p>These time-shift the pattern on the RHS by the number of cycles on the LHS.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="mf">0.25</span> <span class="o">~&gt;</span> <span class="s">"a b c d"</span>
+</code></pre>
+</div>
+
+<p>is the same as</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="s">"d a b c"</span>
+</code></pre>
+</div>
+
+<h4 id="section-4"><code class="highlighter-rouge">&lt;~&gt;</code></h4>
+<p>Pattern replacement: takes the elements of the second pattern and makes a new pattern using the structure of the first</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="s">"x x x"</span> <span class="o">&lt;~&gt;</span> <span class="s">"bd sn"</span>
+</code></pre>
+</div>
+
+<p>is the same as</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="s">"bd sn bd"</span>
+</code></pre>
+</div>
+
+<p>one cycle and</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="s">"sn bd sn"</span>
+</code></pre>
+</div>
+
+<p>the next cycle</p>
+
+<h4 id="section-5"><code class="highlighter-rouge">&lt;&lt;~</code>, <code class="highlighter-rouge">~&gt;&gt;</code></h4>
+<p>Pattern rotation, these move the elements of the pattern without changing the structure of the pattern</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="mi">1</span> <span class="o">~&gt;&gt;</span> <span class="s">"a ~ b c"</span>
+</code></pre>
+</div>
+
+<p>is the same as</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="s">"c ~ a b"</span>
+</code></pre>
+</div>
+
+<h4 id="section-6"><code class="highlighter-rouge">!!!</code></h4>
+<p>List indexing with built-in modulo so you can’t go past the end of the list</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">]</span><span class="o">!!!</span><span class="mi">5</span>
+</code></pre>
+</div>
+
+<p>returns <code class="highlighter-rouge">2</code></p>
+
+<h3 id="useful-haskell-operators">useful Haskell operators</h3>
+
+<h4 id="section-7"><code class="highlighter-rouge">&lt;$&gt;</code></h4>
+<p>A synonym for <code class="highlighter-rouge">fmap</code>, useful for mapping numerical functions so they work on patterns.</p>
+
+<h4 id="section-8"><code class="highlighter-rouge">&lt;*&gt;</code></h4>
+<p>A synonym for <code class="highlighter-rouge">ap</code>, useful for promoting functions to work with patterns.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span> <span class="o">&lt;$&gt;</span> <span class="s">"1 2 3 4"</span>
+</code></pre>
+</div>
+
+<p>is the same as <code class="highlighter-rouge">"3 4 5 6"</code></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="o">+</span><span class="p">)</span> <span class="o">&lt;$&gt;</span> <span class="s">"1 2 3 4"</span> <span class="o">&lt;*&gt;</span> <span class="s">"2"</span>
+</code></pre>
+</div>
+
+<p>is also the same</p>
+
+<h4 id="section-9"><code class="highlighter-rouge">!!</code></h4>
+<p>Haskell’s way of doing list indexing</p>
+
+<h4 id="section-10"><code class="highlighter-rouge">$</code></h4>
+<p>An alternative to parentheses, means “evaluate everything on the right first”</p>
+
+<h4 id="section-11"><code class="highlighter-rouge">.</code></h4>
+<p>Function composition, needs functions with only a single argument unspecified</p>
+
+                </article>
+                
+                
+              </section>
+                
+              <section>
+                <header>
+                  <h1 id="utility" class="tidal-toc-heading">Utility</h1>
+                </header>
+                 
+                
+                <article>
+                  
+                  <h1 id="choose" class="tidal-toc-heading">choose</h1>
+                   <p><code class="highlighter-rouge">choose</code> randomly picks an element from the given list:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">s</span> <span class="s">"arpy*4"</span> <span class="o">#</span> <span class="n">n</span> <span class="p">(</span><span class="n">choose</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">sometimes</span> <span class="p">(</span><span class="o">|+|</span> <span class="n">up</span> <span class="p">(</span><span class="n">choose</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">7</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">9</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)]))</span> <span class="o">$</span> <span class="n">n</span> <span class="s">"~ 0 ~ 0"</span> <span class="o">#</span> <span class="n">s</span> <span class="s">"sid"</span>
+</code></pre>
+</div>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="irand" class="tidal-toc-heading">irand</h1>
+                   <p><code class="highlighter-rouge">irand n</code> generates a pattern of (pseudo-)random integers between <code class="highlighter-rouge">0</code>
+to <code class="highlighter-rouge">n-1</code> inclusive. Notably used to pick a random samples from a
+folder:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"amencutup*8"</span> <span class="o">#</span> <span class="n">n</span> <span class="p">(</span><span class="n">irand</span> <span class="mi">8</span><span class="p">)</span>
+</code></pre>
+</div>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="pequal" class="tidal-toc-heading">pequal</h1>
+                   <div class="highlighter-rouge"><pre class="highlight"><code><span class="n">pequal</span> <span class="o">::</span> <span class="kt">Ord</span> <span class="n">a</span> <span class="o">=&gt;</span> <span class="kt">Time</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Pattern</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="kt">Bool</span>
+</code></pre>
+</div>
+
+<p>Quickly test if the first and the second given pattern are the same in the given number of cycles. This is more of a building block for higher-level tidal functions.</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="rand" class="tidal-toc-heading">rand</h1>
+                   <p><code class="highlighter-rouge">rand</code> generates a pattern of (pseudo-)random, floating point numbers between <code class="highlighter-rouge">0</code> and <code class="highlighter-rouge">1</code>. For example, to bound randomly around the stereo field you can do this:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"bd*8"</span> <span class="o">#</span> <span class="n">pan</span> <span class="n">rand</span>
+</code></pre>
+</div>
+
+<p>Or to enjoy randomised <code class="highlighter-rouge">speed</code> from <code class="highlighter-rouge">0.5</code> to <code class="highlighter-rouge">1.5</code>, you can simply add <code class="highlighter-rouge">0.5</code> to it:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"arpy*4"</span> <span class="o">#</span> <span class="n">speed</span> <span class="p">(</span><span class="n">rand</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span>
+</code></pre>
+</div>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="run" class="tidal-toc-heading">run</h1>
+                   <p><code class="highlighter-rouge">run n</code> generates a pattern representing a cycle of numbers from 0 to n-1 inclusive. Notably used to ‘run’ through a folder of samples in order:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">n</span> <span class="p">(</span><span class="n">run</span> <span class="mi">8</span><span class="p">)</span> <span class="o">#</span> <span class="n">sound</span> <span class="s">"amencutup"</span>
+</code></pre>
+</div>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">every</span> <span class="mi">2</span> <span class="p">(</span><span class="n">slow</span> <span class="mi">2</span><span class="p">)</span> <span class="o">$</span> <span class="n">n</span> <span class="p">(</span><span class="n">run</span> <span class="mi">8</span><span class="p">)</span> <span class="o">#</span> <span class="n">sound</span> <span class="s">"amencutup"</span>
+</code></pre>
+</div>
+
+<p>The first parameter to <code class="highlighter-rouge">run</code> can be given as a pattern:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">n</span> <span class="p">(</span><span class="n">run</span> <span class="s">"&lt;4 8 4 6&gt;"</span><span class="p">)</span> <span class="o">#</span> <span class="n">sound</span> <span class="s">"amencutup"</span>
+</code></pre>
+</div>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="scale" class="tidal-toc-heading">scale</h1>
+                   <p><code class="highlighter-rouge">scale</code> will take a pattern which goes from 0 to 1 (like <code class="highlighter-rouge">sine</code>), and scale it to a different range - between the first and second arguments. In the below example, <code class="highlighter-rouge">scale 1 1.5</code> shifts the range of <code class="highlighter-rouge">sine</code> from 0 - 1 to 1 - 1.5.</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">jux</span> <span class="p">(</span><span class="n">iter</span> <span class="mi">4</span><span class="p">)</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"arpy arpy:2*2"</span>
+  <span class="o">|+|</span> <span class="n">speed</span> <span class="p">(</span><span class="n">slow</span> <span class="mi">4</span> <span class="o">$</span> <span class="n">scale</span> <span class="mi">1</span> <span class="mf">1.5</span> <span class="n">sine</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>The above is the equivalent of the following:</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">jux</span> <span class="p">(</span><span class="n">iter</span> <span class="mi">4</span><span class="p">)</span> <span class="o">$</span> <span class="n">sound</span> <span class="s">"arpy arpy:2*2"</span>
+  <span class="o">|+|</span> <span class="n">speed</span> <span class="p">(</span><span class="n">slow</span> <span class="mi">4</span> <span class="o">$</span> <span class="n">sine</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><code class="highlighter-rouge">scalex</code> is an exponential version of <code class="highlighter-rouge">scale</code>, good to use for frequencies.  For example, <code class="highlighter-rouge">scale 20 2000 "0.5"</code> will 
+give <code class="highlighter-rouge">1010</code> - halfway between <code class="highlighter-rouge">20</code> and <code class="highlighter-rouge">2000</code>.  But <code class="highlighter-rouge">scalex 20 2000 0.5</code> will give <code class="highlighter-rouge">200</code> - halfway between on a <em>logarithmic</em>
+scale.  This usually sounds better if you’re using the numbers as pitch frequencies.  Since <code class="highlighter-rouge">scalex</code> uses logarithms, don’t
+try to scale things to zero or less!</p>
+
+                </article>
+                
+                 
+                
+                <article>
+                  
+                  <h1 id="up" class="tidal-toc-heading">up</h1>
+                   <p><code class="highlighter-rouge">up</code> changes the speed of playback, but conforming to a 12-tone scale. The example below creates a pattern that plays the sample at 5 semitones, then 3 semitones, above natural pitch.</p>
+
+<div class="render highlighter-rouge"><pre class="highlight"><code><span class="n">d1</span> <span class="o">$</span> <span class="n">up</span> <span class="s">"5 3"</span> <span class="o">#</span> <span class="n">sound</span> <span class="s">"arpy"</span>
+</code></pre>
+</div>
+
+                </article>
+                
+                
+              </section>
+              
+              <!-- content end -->
+            </div>
+            <div class="col-md-3">
+              <div class="tidal-sidebar">
+                <ul class="nav affix">
+                    
+                  <li>
+                    <a href="#pattern_transformers">
+                      <h4>Pattern Transformers</h4>
+                    </a>
+                    <ul class="nav">
+                           
+                      <li>
+                        <a href="#palindrome">palindrome</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#mapping-over-patterns">Mapping over patterns</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#brak">brak</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#degrade">degrade</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#fast">fast</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#fit">fit</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#iter">iter</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#jux-and-juxby">jux (and juxBy)</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#linger">linger</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#beat-rotation">Beat rotation</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#rev">rev</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#scramble">scramble</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#shuffle">shuffle</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#slow">slow</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#smash">smash</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#spread">spread</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#toscale">toScale</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#trunc">trunc</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#zoom">zoom</a>
+                      </li>
+                       
+                    </ul>
+                  </li>
+                    
+                  <li>
+                    <a href="#sample">
+                      <h4>Sample Transformers</h4>
+                    </a>
+                    <ul class="nav">
+                           
+                      <li>
+                        <a href="#loopat">loopAt</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#gap">gap</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#chop">chop</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#striate">striate</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#striatel">striateL</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#stut">stut</a>
+                      </li>
+                       
+                    </ul>
+                  </li>
+                    
+                  <li>
+                    <a href="#conditional">
+                      <h4>Conditional Transformers</h4>
+                    </a>
+                    <ul class="nav">
+                           
+                      <li>
+                        <a href="#somecyclesby">someCyclesBy</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#foldevery">foldEvery</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#ifp">ifp</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#mask">mask</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#every">every</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#sometimesby">sometimesBy</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#swingby">swingBy</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#when">when</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#whenmod">whenmod</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#within">within</a>
+                      </li>
+                       
+                    </ul>
+                  </li>
+                    
+                  <li>
+                    <a href="#compositions">
+                      <h4>Compositions</h4>
+                    </a>
+                    <ul class="nav">
+                           
+                      <li>
+                        <a href="#seqp">seqP</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#cat">cat</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#fastcat">fastcat</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#interlace">interlace</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#randcat">randcat</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#append">append</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#spin">spin</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#stack">stack</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#superimpose">superimpose</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#weave">weave</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#wedge">wedge</a>
+                      </li>
+                       
+                    </ul>
+                  </li>
+                    
+                  <li>
+                    <a href="#transitions">
+                      <h4>Transitions</h4>
+                    </a>
+                    <ul class="nav">
+                        
+                      <li>
+                        <a href="#anticipate">anticipate</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#clutch">clutch</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#histpan">histpan</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#jump">jump</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#jumpin">jumpIn</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#jumpin">jumpIn'</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#jumpmod">jumpMod</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#mortal">mortal</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#superwash">superwash</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#wait">wait</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#wash">wash</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#xfade">xfade</a>
+                      </li>
+                       
+                    </ul>
+                  </li>
+                    
+                  <li>
+                    <a href="#synth_parameters">
+                      <h4>Synth Parameters</h4>
+                    </a>
+                    <ul class="nav">
+                           
+                      <li>
+                        <a href="#hcutoff">hcutoff</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#bandf">bandf</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#bandq">bandq</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#begin">begin</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#coarse">coarse</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#crush">crush</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#cut">cut</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#cutoff">cutoff</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#delay">delay</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#delayfeedback">delayfeedback</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#delaytime">delaytime</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#end">end</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#gain">gain</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#accelerate">accelerate</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#hresonance">hresonance</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#legato">legato</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#loop">loop</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#nudge">nudge</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#pan">pan</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#resonance">resonance</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#room-and-size">room and size</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#shape">shape</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#sound">sound</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#speed">speed</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#sustain">sustain</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#unit">unit</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#vowel">vowel</a>
+                      </li>
+                       
+                    </ul>
+                  </li>
+                    
+                  <li>
+                    <a href="#combining_parameters">
+                      <h4>Combining Parameters</h4>
+                    </a>
+                    <ul class="nav">
+                         
+                    </ul>
+                  </li>
+                    
+                  <li>
+                    <a href="#operators">
+                      <h4>Operators</h4>
+                    </a>
+                    <ul class="nav">
+                         
+                    </ul>
+                  </li>
+                    
+                  <li>
+                    <a href="#utility">
+                      <h4>Utility</h4>
+                    </a>
+                    <ul class="nav">
+                        
+                      <li>
+                        <a href="#choose">choose</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#irand">irand</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#pequal">pequal</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#rand">rand</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#run">run</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#scale">scale</a>
+                      </li>
+                         
+                      <li>
+                        <a href="#up">up</a>
+                      </li>
+                       
+                    </ul>
+                  </li>
+                  
+                </ul>
+              </div>
+              <!-- sidebar end -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- main end -->
+      
+      <footer class="navbar navbar-default navbar-static-bottom">
+        <div class="container">
+          <p class="navbar-text">
+            Docs updated Jan 2018, TidalCycles version <strong>0.9.6</strong>
+          </p>
+          <ul class="nav navbar-nav">
+            
+            
+            <li >
+              <a href="/credits.html">Credits</a>
+            </li>
+            
+          </ul>
+        </div>
+      </footer>
+      <!-- Piwik -->
+<script type="text/javascript">
+  var _paq = _paq || [];
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//stats.lurk.org/";
+    _paq.push(['setTrackerUrl', u+'piwik.php']);
+    _paq.push(['setSiteId', 1]);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<noscript><p><img src="//stats.lurk.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+<!-- End Piwik Code -->
+
+    </div>
+  </body>
+</html>

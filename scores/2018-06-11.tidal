@@ -1,0 +1,56 @@
+cps (90/60/4)
+
+import qualified Sound.Tidal.Scales as Scales
+
+{- Drink Driving Test  -}
+d1 
+$ every 7 (striate 3) 
+$ every 4 (# speed (-0.75))
+$ slow 8
+$ rev 
+$ n (run 26) 
+  # s "alphabet" 
+  # gain 0.60
+
+t1 (xfadeIn 4) 
+$ sound "[bd*4 sd? [cp:1 cp:2?]? sd sd?]" 
+  # gain 0.70
+  # room 0.05 # orbit "1"
+
+t1 (xfadeIn 4) $ silence
+
+d2 
+$ whenmod 16 14 (striate 2)
+$ s "ades3*16" 
+  # n (choose [0..6]) 
+  # gain 0.75
+
+t2 (xfadeIn 4) $ silence
+
+d3
+$ fast 2 
+$ s "ades2*2 [ades2*3 [ades2 ades2]?] ades2*3" 
+  # n (choose [0..9])
+
+t3 (xfadeIn 4) $ silence
+
+d4 
+$ fast (choose [0, 1, 2, 3, 4, 5, 0.75, 0.50, 0.25, 0.15]) 
+$ degradeBy 0.10
+$ sound "arp*8"
+  # up (toScale Scales.diminished (choose [0..24])) 
+  # cut "1"
+  # begin (scale 0 0.3 sine)
+  # gain 0.8
+
+t4 (xfadeIn 4 ) $ silence
+
+hush
+
+d1 $ sound "bd sd [bd sn bd]*2"
+
+d5 $ sound "[alphabet:5 alphabet:20 alphabet:2 alphabet:10]*2"
+
+d5 $ silence
+
+d1 silence

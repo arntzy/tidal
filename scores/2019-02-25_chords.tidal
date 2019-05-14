@@ -1,0 +1,139 @@
+-- The list above can be combined with a root using the ' to use with the synths in Super Dirt like this:
+
+d1 $ up "c'maj e'minor7 ef'maj7" # s "viola:2" # room 0.50
+
+-- TODO: to get this to work, I think I have to extract the string value from 
+
+d1 $ up (parseBP_E <$> randomChord roots chordtypes) # s "viola:2" # room 0.50
+
+d2 $ "bd*5" # gain 0.80
+
+-- The root can be set as 'sharp' or 'flat' with s or f respectively:
+d1 $ n "cf'maj c'maj cs'maj" # s "supermandolin"
+
+-- The octave can be set with a number. The default is 5:
+d1 $ n("c4'maj c5'maj c6'maj") # s "supermandolin"
+
+-- The chords can be patterned using the |+ operator:
+d1 $ n ("c e f" |+ "<'maj 'min>") # s "supermandolin"
+
+-- d1 $ n ("c e f" |+ (choose chordtypes)) # s "supermandolin"
+
+-- This will give a pattern equivalent to:
+
+d1 $ n ("c'maj e'maj f'maj, c'min e'min f'min") # s "supermandolin"
+
+do
+  let progression p = p |*| up (slow 8 $ "0 5 10 7")
+  let melody = progression $ stut 4 0.3 1.033 $ fast 2 $ up "0 3 7 10" |*| up "12" # s "pluck"
+  let bass = progression $ s "pluck" |*| speed "0.5" |*| gain "1.0" # shape 0.6 # cut "-1"
+  d1 $ stack [melody, bass]
+
+do
+  setcps (130/120)
+  d1 $ s "[bd bd]"
+  d3 $ s "[bass:3*4]"
+  d2 $ s "[[~ sn:3], [~ hh]*2]"
+
+-- CUSTOM HASKELL SHIT
+
+d1 $ up "[0, 4, 7] [0, 3, 7]" # s "viola:2"
+
+d1 $ up (buildChord "c" (choose chordtypes)) # s "viola:2"
+
+let chordtypes = ["6by9", "7f10", "7f5", "7f9", "7s5", "7s5f9", "7sus2", "7sus4", "9s5", "9sus4", "aug", "dim", "dim7", "dom7", "eleven", "elevenSharp", "five", "m11", "m11s", "m11sharp", "m13m6", "m6by9", "m7f5", "m7f9", "m7flat5", "m7flat9", "m7s5", "m7s9", "m7sharp5", "m7sharp5flat9", "m7sharp9", "m9", "m9s5", "m9sharp5", "maj", "maj11", "maj7", "maj9", "major", "major7", "min", "min7", "minor", "minor7", "msharp5", "nine", "nineSharp5", "nineSus4", "ninesus4", "one", "plus", "sevenFlat10", "sevenFlat5", "sevenFlat9", "sevenSharp5", "sevenSharp5flat9", "sevenSus2", "sevenSus4", "sharp5", "six", "sixby9", "sus2", "sus4", "thirteen"]
+-- let chordtypes = ["'6by9", "'7f10", "'7f5"]
+
+let roots = ["c", "cf", "cs", "d", "df", "ds", "e", "ef", "es", "f", "ff", "fs", "g", "gf", "gs", "a", "af", "as"] 
+
+
+let testchords = ["c'6by9", "d'7f10"]
+
+d1 $ up  # s "viola:2"
+
+-- type Root = String
+-- type Chordquality = String
+-- type TidalChord = IO String
+
+import System.Random (randomRIO)
+
+-- import Data.Random.Extras (choice)
+
+-- import Data.Random.List
+
+-- import System.Random (randomR)
+
+-- let chordList :: String ;chordList = unwords $ map fst (chordTable :: [(String, [Int])])
+
+-- let pick = (\l g -> l !! (randomR (0, length l) g))
+
+let pick :: [a] -> IO a ;pick xs = fmap (xs !!) $ randomRIO (0, length xs - 1)
+
+let buildChord :: String -> String -> String ;buildChord root chordquality = root ++ "'" ++ chordquality
+ 
+let randomChord :: [String] -> [String] -> IO String ;randomChord xs ys = do {root <- pick xs; chordtype <- pick ys; return (buildChord root chordtype)}
+
+let makePattern = do 
+                    chord <- parseBP_E <$> (randomChord roots chordtypes)
+                    return (up chord) 
+                    
+
+-- Partial Success!!! 
+
+do
+  chord <- parseBP_E <$> (randomChord roots chordtypes)  
+  d1 $ s "viola:3 viola:2" # up chord
+
+let getHarmony = do
+                   randochord <- makePattern
+                   let harmony = randochord # s "viola:3"
+                   return harmony
+
+d1 $ stack [getHarmony]
+
+d1 $ every 4 (up) (parseBP_E <$> (randomChord roots chordtypes)) # s "viola:2"
+
+d1 $ every 4 (rev) (sound "bd*2 [bd [sn sn*2 sn] sn]")
+
+#########
+# TESTS #
+#########
+
+d1 $ up "c'7sus2" # s "viola:2"
+-- d1 $ up (buildChord "c" "7sus2") # s "viola:2"
+
+d1 $ up "c'maj e'min" # s "viola" # n "e'min"
+
+x <- pick roots
+
+x <- randomChord roots chordtypes
+
+do
+  setcps (130/120)
+  let bassDrum = s "[bd bd]"
+  let bassLine = s "[bass:3*4]"
+  let percussion = s "[[~ sn:3], [~ hh]*2]"
+  d1 $ stack [bassDrum, bassLine, percussion]
+
+-- import Data.Random
+-- sample $ randomElement  [1, 2, 3]
+
+do
+  setcps 1
+  let melody = slow 4 $ up "12 ~ ~ 12 ~ ~ 12 ~ 13 ~ ~ 13 ~ ~ 13 ~ 14 ~ ~ 14 ~ ~ 14 ~ 15 ~ ~ 15 ~ ~ 15 ~" # s "pluck"
+  d1 $ melody |*| up "[0,3,7,10]"
+
+do
+  setcps 1
+  let melody = slow 4 $ n "12 ~ ~ 12 ~ ~ 12 ~ 13 ~ ~ 13 ~ ~ 13 ~ 14 ~ ~ 14 ~ ~ 14 ~ 15 ~ ~ 15 ~ ~ 15 ~" # s "superpiano" # legato 8
+  d1 $ melody |+| n "[0,3,7,10]" |*| gain "0.74"
+
+do
+  setcps 2
+  let rhythm = s "[bd, <~ sn:3>, hh(1,2,1)]"
+  let bass = s (slow 3 "bass:3(<7 5 6>*2,12)") # up (slow 4 "0 1 2 3")
+  let fatten p = p |*| up "[0,7,12,19]" |*| gain "0.9"
+  let soften p = p |*| gain "0.80"
+  d1 $ stack [rhythm, fatten $ bass]
+
+hush

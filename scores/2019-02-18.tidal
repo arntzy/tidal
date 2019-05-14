@@ -1,0 +1,34 @@
+setcps (100/60/4)
+
+let major = "[0,4,7]"
+
+let minor = "[0,3,7]"
+
+p "tp1" $ s "teapot" # cut 1
+
+p "tp2" $ s "teapot" # cut 2
+
+p "tp3" $ s "teapot" # cut 3
+
+-- write a function to take a chord progression and arrange it for three voices
+p "teapots" $ stack [
+  up "<0 0 [1 2]>" # s "teapot" # cut 1,
+  up "<4 2 4>" # s "teapot" # cut 2,
+  up "<7 5 9>" # s "teapot" # cut 3
+]
+
+d1 $ s "[bd*3 sd:3] [sd*2? ~] [bd*3 ~]"
+
+p "tp" $ cat [ 
+  up minor # s "teapot",
+  up major # s "teapot"
+] 
+
+d1 $ cat [sound "bd sn:2" # vowel "[a o]/2",
+         sound "casio casio:1 casio:2*2",
+         sound "drum drum:2 drum:3 drum:4*2"
+        ]
+
+p "teapots" silence
+
+hush

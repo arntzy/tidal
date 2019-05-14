@@ -1,0 +1,62 @@
+/* Tempo */
+setcps (100/60/4)
+
+##############
+# PERCUSSION #
+##############
+
+p "bassdrum" $ sound "bd:3*4?" # gain 0.90
+
+p "snare" $ sound "[sn:4*8? sn:2 sn:3?]" # gain 0.80
+
+########
+# BASS #
+########
+
+p "bass" $ up "0 7 ~ [8 [10 12]]" # sound "bass bass:4"
+
+
+#############
+# WOODWINDS #
+#############
+
+p "clarinet1" $ whenmod 8 6 (rev) $ up "[0 11] ~ -6?" # sound "clarinets" # gain 0.50
+
+p "clarinet2" $ every 2 (rev) $ up "<[2 4? 6]?, 5? 6>" # sound "clarinets" # gain 0.50
+
+p "clarinet3" $ every 3 (rev) $ up "[9 ~ 10? 12 13]" # sound "clarinets" # gain 0.50
+
+#########
+# BRASS #
+#########
+
+p "trombone1" $ randslice 16 $ up "0? -4 0" # sound "trombones" # gain 1.0
+
+###############
+# MUTE GROUPS #
+###############
+
+/* PERCUSSION */
+
+p "bassdrum" silence
+
+p "snare" silence
+
+
+/* BASS */
+
+p "bass" silence
+
+/* CLARINETS  */
+
+p "clarinet1" silence
+
+p "clarinet2" silence
+
+p "clarinet3" silence
+
+/* BRASS */
+
+p "trombone1" silence
+
+hush
