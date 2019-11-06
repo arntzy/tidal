@@ -1,14 +1,4 @@
-setcps (120/60/4)
-
-#############
-# CONSTANTS #
-#############
-
-let num_violin_samples = 1502
-
-let num_viola_samples = 973
-
-let num_cello_samples = 889
+setcps (90/60/4)
 
 ###############
 # INSTRUMENTS #
@@ -18,21 +8,29 @@ let num_cello_samples = 889
 # SCORE #
 #########
 
-p "violin1" $ s "violin*9?/2" # n (irand num_violin_samples)
-  # room 0.50
-  # size 0.50
+do
+  let num_violin_samples = 1502
+  p "violin1" $ s "violin*5?/2" # n (irand num_violin_samples)
+    # room 0.50
+    # size 0.50
 
-p "violin2" $ s "violin*9?/3" # n (irand num_violin_samples)
-  # room 0.50
-  # size 0.50
+do
+  let num_violin_samples = 1502
+  p "violin2" $ s "violin*5/3" # n (irand num_violin_samples)
+    # room 0.50
+    # size 0.50
 
-p "viola" $ s "viola*3/5?" # n (irand num_viola_samples)
-  # room 0.50
-  # size 0.50
+do
+  let num_viola_samples = 973
+  p "viola" $ s "viola*5/5?" # n (irand num_viola_samples)
+    # room 0.50
+    # size 0.50
 
-p "cello" $ s "cello*12?/4" # n (irand num_cello_samples)
-  # room 0.50
-  # size 0.50
+do
+  let num_cello_samples = 889
+  p "cello" $ s "cello*1/4" # n (irand num_cello_samples)
+    # room 0.50
+    # size 0.50
 
 ###############
 # Mute Groups #

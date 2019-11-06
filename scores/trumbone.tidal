@@ -1,0 +1,93 @@
+setcps (120/60/4)
+
+#############
+# CONSTANTS #
+#############
+
+let num_samples = 20
+
+###############
+# INSTRUMENTS #
+###############
+
+p "tb" $ slow num_samples $ n (run num_samples) # s "trombone" # cut 1
+
+p "tpt" $ slow num_samples $ n (run num_samples) # s "trumpet" # cut 2
+
+#########
+# SCORE #
+#########
+
+p "tb" $ up (run 6) # s "trombone:3"
+
+p "tb2" $ up "[ 7 .. 12 ]" # s "trombone:3"
+
+p "tpt" $ up (run 6) # s "trumpet:6" # gain 0.75
+
+p "tpt2" $ up "[ 7 .. 12 ]" # s "trumpet:6" # gain 0.75
+
+###########################
+# MAIN IMPROVISED SECTION #
+###########################
+
+p "drums" $ s "bd:4*5 sn:5 ~" # gain 0.85
+  # room 0.25
+  # size 0.25
+
+p "tpt_solo" $ s "trumpet*9?" # n (irand 485)
+  # room 0.50
+  # size 0.50
+
+p "tb_solo" $ s "trombone*9?/2" # n (irand 833)
+  # room 0.50
+  # size 0.50
+
+#########
+# DRUMS #
+#########
+
+solo "drums"
+
+unsolo "drums"
+
+p "drums" silence
+
+###########
+# TRUMPET #
+###########
+
+solo "tpt_solo"
+
+unsolo "tpt_solo"
+
+p "tpt_solo" silence
+
+############
+# TROMBONE #
+############
+
+solo "tb_solo"
+
+unsolo "tb_solo"
+
+p "tb_solo" silence
+
+###############
+# Mute Groups #
+###############
+
+p "tb" silence
+
+p "tb2" silence
+
+p "tpt_solo" silence
+
+p "tpt2" silence
+
+p "tpt" silence
+
+p "tb_solo" silence
+
+p "drums" silence
+
+hush

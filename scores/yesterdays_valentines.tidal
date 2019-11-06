@@ -8,38 +8,6 @@ let room_amt = 0.25
 
 let room_size = 0.50
 
-############
-# Defaults #
-############
-
--- sometimes = sometimesBy 0.5
--- often = sometimesBy 0.75
--- rarely = sometimesBy 0.25
--- almostNever = sometimesBy 0.1
--- almostAlways = sometimesBy 0.9
-
-############
-# Examples #
-############
--- d1 $ degradeBy 0.25 $ sound "bd*16"
-
--- d1 $ sometimesBy 0.75 (# crush 4) $ sound "bd arpy sn ~"
-
--- d1 $ rarely (# crush 4) $ sound "bd*8"
-
-#########
-# DRUMS #
-#########
-
--- TODO: Have to figure out better string generation for generating Tidal Strings
--- TODO: What happens when a function takes a Pattern String
-
--- let sample_banks = [("hihat", "hh"),
-                    -- ("bassdrum", "bd"),
-                    -- ("snare", "sn")]
-
--- let hihat = parseBP_E (lookup "highhat" sample_banks)
-
 #########
 # HIHAT #
 #########
@@ -59,40 +27,22 @@ solo "hihat"
 
 unsolo "hihat"
 
--- Tools
-
-p "hihat" $ s hihat # n (irand hihat_num_samples)
-  # gain hihat_gain
-
+-- Test Samples
 p "hihat" $ slow hihat_num_samples $ n (run hihat_num_samples) # s hihat
+  # gain hihat_gain
 
 ############
 # BASSDRUM #
 ############
 
--- Settings
-
-let bassdrum_sample_bank = "db"
-
-let bassdrum = "db*8"
-
-let bassdrum_num_samples = 13
-
-let bassdrum_degradeBy = 0.50 
-
-let bassdrum_gain = 1.0
-
--- Run
-
-p "bassdrum" $ degradeBy bassdrum_degradeBy $ s bassdrum # n (irand bassdrum_num_samples)
-  # gain bassdrum_gain
-
-p "bassdrum" $ s bassdrum # n (run bassdrum_num_samples) # cut 1
-
-p "bassdrum" $ slow bassdrum_num_samples $ n (run bassdrum_num_samples) # s bassdrum 
-
-p "bassdrum" $ s bassdrum # n (irand bassdrum_num_samples)
-  # gain bassdrum_gain
+do 
+  let bassdrum_sample_bank = "db"
+  let bassdrum = "db*8"
+  let bassdrum_num_samples = 13
+  let bassdrum_degradeBy = 0.50 
+  let bassdrum_gain = 1.0
+  p "bassdrum" $ degradeBy bassdrum_degradeBy $ s bassdrum # n (irand bassdrum_num_samples)
+    # gain bassdrum_gain
 
 p "bassdrum" silence
 
@@ -100,31 +50,22 @@ solo "bassdrum"
 
 unsolo "bassdrum"
 
+-- Test Samples
+p "bassdrum" $ slow bassdrum_num_samples $ n (run bassdrum_num_samples) # s bassdrum 
+  # gain bassdrum_gain
+
 #########
 # SNARE #
 #########
 
--- Settings
-
-let snare_sample_bank = "sn"
-
-let snare = "sn*16"
-
-let snare_num_samples = 52
-
-let snare_degradeBy = 0.75 
-
-let snare_gain = 0.75
-
--- Run
-
-p "snare" $ degradeBy snare_degradeBy $ s snare # n (irand snare_num_samples)
-  # gain snare_gain
-
-p "snare" $ slow snare_num_samples $ n (run snare_num_samples) # s snare 
-
-p "snare" $ s snare # n (irand snare_num_samples)
-  # gain snare_gain
+do
+  let snare_sample_bank = "sn"
+  let snare = "sn*16"
+  let snare_num_samples = 52
+  let snare_degradeBy = 0.75 
+  let snare_gain = 0.70
+  p "snare" $ degradeBy snare_degradeBy $ s snare # n (irand snare_num_samples)
+    # gain snare_gain
 
 p "snare" silence
 
@@ -132,27 +73,21 @@ solo "snare"
 
 unsolo "snare"
 
+-- Test Samples
+p "snare" $ slow snare_num_samples $ n (run snare_num_samples) # s snare 
+  # gain snare_gain
+
 #########
 # CLICK #
 #########
 
--- Settings
-
-let click = "click*16"
-
-let click_num_samples = 4 
-
-let click_gain = 1.0
-
-let click_degradeBy = 0.25
-
-p "click" $ degradeBy click_degradeBy $ s click # n (irand click_num_samples)
-  # gain click_gain
-
-p "click" $ s click # n (irand click_num_samples)
-  # gain click_gain
-
-p "click" $ slow click_num_samples $ n (run click_num_samples) # s click 
+do
+  let click = "click*16"
+  let click_num_samples = 4 
+  let click_gain = 0.90
+  let click_degradeBy = 0.25
+  p "click" $ degradeBy click_degradeBy $ s click # n (irand click_num_samples)
+    # gain click_gain
 
 p "click" silence
 
@@ -160,27 +95,21 @@ solo "click"
 
 unsolo "click"
 
+-- Test Samples
+p "click" $ slow click_num_samples $ n (run click_num_samples) # s click 
+  # gain click_gain
+
 ##############
 # PERCUSSION #
 ##############
 
--- Settings
-
-let perc = "can*16"
-
-let perc_num_samples = 14 
-
-let perc_gain = 1.0
-
-let perc_degradeBy = 0.25
-
-p "perc" $ degradeBy perc_degradeBy $ s perc # n (irand snare_num_samples)
-  # gain perc_gain
-
-p "perc" $ s perc # n (irand perc_num_samples)
-  # gain perc_gain
-
-p "perc" $ slow perc_num_samples $ n (run perc_num_samples) # s perc 
+do
+  let perc = "can*16"
+  let perc_num_samples = 14 
+  let perc_gain = 0.90
+  let perc_degradeBy = 0.25
+  p "perc" $ degradeBy perc_degradeBy $ s perc # n (irand perc_num_samples)
+    # gain perc_gain
 
 p "perc" silence
 
@@ -188,28 +117,21 @@ solo "perc"
 
 unsolo "perc"
 
+-- Test Samples
+p "perc" $ slow perc_num_samples $ n (run perc_num_samples) # s perc 
+  # gain perc_gain
+
 #######
 # EFX #
 #######
 
--- Settings
-
-let efx = "speakspell*16"
-
-let efx_num_samples = 12 
-
-let efx_gain = 0.60
-
-let efx_degradeBy = 0.25
-
-p "efx" $ degradeBy efx_degradeBy $ s efx # n (irand snare_num_samples)
-  # gain efx_gain
-
-p "efx" $ s efx # n (irand efx_num_samples)
-  # gain efx_gain
-
-p "efx" $ slow efx_num_samples $ n (run efx_num_samples) # s efx 
-  # gain efx_gain
+do
+  let efx = "glitch*16"
+  let efx_num_samples = 8 
+  let efx_gain = 0.75
+  let efx_degradeBy = 0.50
+  p "efx" $ degradeBy efx_degradeBy $ s efx # n (irand efx_num_samples)
+    # gain efx_gain
 
 p "efx" silence
 
@@ -217,18 +139,8 @@ solo "efx"
 
 unsolo "efx"
 
-#######
-# OLD #
-#######
-
-d1 $ s "kicklinn kicklinn ~ ~ kicklinn ~ ~"
-
-d2 $ s "[~ ~ realclaps ~ ~ [~ realclaps?] ~]"
-
-d3 $ s "[hh:10*7]*2?"
-
-d4 $ s "drum:2"
-
-d1 silence
+-- Test Samples
+p "efx" $ slow efx_num_samples $ n (run efx_num_samples) # s efx 
+  # gain efx_gain
 
 hush

@@ -1,0 +1,8 @@
+samples/viola filter=lfs diff=lfs merge=lfs -text
+samples/violin filter=lfs diff=lfs merge=lfs -text
+samples/cello filter=lfs diff=lfs merge=lfs -text
+samples/clarinet filter=lfs diff=lfs merge=lfs -text
+samples/piano filter=lfs diff=lfs merge=lfs -text
+samples/teapot filter=lfs diff=lfs merge=lfs -text
+samples/trombone filter=lfs diff=lfs merge=lfs -text
+samples/trumpet filter=lfs diff=lfs merge=lfs -text
